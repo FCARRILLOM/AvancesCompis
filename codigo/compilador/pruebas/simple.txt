@@ -1,0 +1,36 @@
+programa simple;
+variables
+	int : a, b;
+    float : i, j;
+
+funcion void demo();
+variables
+    int : x, y;
+{
+    x = 1;
+    y = 2;
+	escribe("demo=", x+y);
+}
+
+funcion int demo_int();
+{
+    demo();
+    escribe("demo_int:");
+    regresa(50);
+}
+
+principal() {
+	a = 10;
+    b = 5;
+
+    escribe(demo_int());
+
+    escribe("valor de i: ");
+    lee(a);
+
+    i = 10.0 * a;
+    j = b + 10.5;
+
+    escribe("a: ", a, "b: ", b);
+    escribe("i: ", i, "j: ", j);
+}

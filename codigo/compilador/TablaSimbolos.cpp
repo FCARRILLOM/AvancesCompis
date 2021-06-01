@@ -1,0 +1,382 @@
+#include "TablaSimbolos.h"
+#include <iostream>
+#include <algorithm>
+
+void TablaSimbolos::addVarsToDir(std::string funcId, std::vector<VarEntry> vars) {
+   // mapea todas las variables dentro del directorio de variables
+   if ((*funcDir)[funcId].varDir == nullptr) {
+      std::cout << "ERROR: Empty variable directory for function: " << funcId << "\n";
+      return;
+   }
+
+   // store virtual addresses
+   // memory: can be local or global, varType, non temp
+   for (VarEntry& var : vars) {
+      int memAddr = -1;
+      std::string scope = "local";
+      if (currentFuncDecl == "main") scope = "global";
+
+      std::vector<ArrNode> arrNodes = var.arrNodes;
+      bool notArray = arrNodes.empty();
+      int size = 1;
+      for (ArrNode& node : arrNodes) {
+         size *= node.size;
+      }
+
+      int type = cubo.typeMap[var.varType];
+      if (scope == "global")
+         (*funcDir)[programName].numLVar[type] += size;
+      else 
+         (*funcDir)[currentFuncDecl].numLVar[type] += size;
+
+      switch (type) {
+         case 0: {
+            memAddr = memoria->reserveIntMemory(scope, false, size);
+            break;
+         }
+         case 1: {
+            memAddr = memoria->reserveFloatMemory(scope, false, size);
+            break;
+         }
+         case 2: {
+            memAddr = memoria->reserveCharMemory(scope, size);
+            break;
+         }
+      }
+
+      if (memAddr == -1) {
+         std::cout << "ERROR: cannot reserve space for variable " + var.varName + "\n";
+      }
+
+     var.memoryAddr = memAddr;
+     //std::cout << "RESERVE var - " << var.varName << " with addr - " << var.memoryAddr << "\n";
+   }
+
+   for (VarEntry var : vars) {
+     (*(*funcDir)[funcId].varDir)[var.varName] = var;
+   }
+
+   /* delete
+   if (currentFuncDecl == "main") {
+      std::cout << programName << ":\n";
+      for (auto var : (*(*funcDir)[funcId].varDir)) {
+         std::cout << var.first << var.second.arrNodes.size() << "\n";
+      }
+   }
+   */
+}
+
+///// VARIABLES DECLARADAS DENTRO DEL BLOQUE (variables ...) /////
+// 1
+void TablaSimbolos::saveCurrentVarType(const std::string varType) {
+   currentVarType = varType;
+}
+
+// 2
+void TablaSimbolos::addVarToList(const std::string varName) {
+   for (VarEntry var : varsForDir) {
+      if (var.varName == varName) {
+         std::cout << "ERROR: redeclaration of variable named '" + varName + "'\n";
+         return;
+      }
+   }
+
+   // check for duplicate variable declarations in global scope
+   if (currentFuncDecl == "main") {
+      std::unordered_map<std::string, VarEntry>& globalVars = *(*funcDir)[programName].varDir;
+      for (auto var : globalVars) {
+         if (var.first == varName) {
+            std::cout << "ERROR: redeclaration of global variable named '" + varName + "'\n";
+            return;
+         }
+      }
+   }
+
+   for (VarEntry par : parameters) {
+      if (par.varName == varName) {
+         std::cout << "ERROR: redeclaration of function parameter named '" + varName + "'\n";
+         return;
+      }
+   }
+
+   varsForDir.push_back(VarEntry {varName, currentVarType, -1, {}});
+}
+
+// 3
+void TablaSimbolos::addFirstArrNode() {
+   VarEntry& currVarEntry = varsForDir.back();
+   ArrNode newNode;
+   currVarEntry.arrNodes.push_back(newNode);
+   R = 1;
+}
+
+// 4
+void TablaSimbolos::storeDimSize(int size) {
+   VarEntry& currVarEntry = varsForDir.back();
+   ArrNode& lasttNode = currVarEntry.arrNodes.back();
+   lasttNode.size = size;
+   R = R * size;
+}
+
+// 5
+void TablaSimbolos::addArrNode() {
+   VarEntry& currVarEntry = varsForDir.back();
+   ArrNode newNode;
+   currVarEntry.arrNodes.push_back(newNode);
+}
+
+// 6
+void TablaSimbolos::endArrNode() {
+   VarEntry& currVarEntry = varsForDir.back();
+   std::vector<ArrNode>& arrNodes = currVarEntry.arrNodes;
+
+   for (ArrNode& node : arrNodes) {
+      node.m = R / node.size;
+      R = node.m;
+   }
+   // last node m = k = 0
+   arrNodes.back().m = 0;
+}
+
+
+///// VARIABLES DECLARADAS COMO PARAMETROS EN FUNCIONES /////
+// 1
+void TablaSimbolos::initParameterVars() {
+   parameters.clear();
+}
+
+// 2
+void TablaSimbolos::addParameterVar(std::string varName, std::string varType) {
+   // check existing variable name in parameter
+   for (VarEntry par : parameters) {
+      if (par.varName == varName) {
+         std::cout << "ERROR: redeclaration of parameter named '" + varName + "'\n";
+         return;
+      }
+   }
+
+   parameters.push_back(VarEntry {varName, varType, -1, {}});
+}
+
+// DEFINICIONES DE FUNCIONES
+int TablaSimbolos::funcExists(const std::string funcId) {
+   return((*funcDir).count(funcId));
+}
+
+// 1
+void TablaSimbolos::createFunc(const std::string funcId, const std::string returnType) {
+   if (funcExists(funcId)) { 
+      std::cout << "Duplicate function name\n"; 
+      return;
+   }
+   currentFuncDecl = funcId;
+   (*tablasDatos).currentFunc = funcId;
+
+   (*funcDir)[funcId] = FuncEntry {funcId, returnType, std::vector<std::string>(), {0, 0, 0, 0}, {0, 0, 0, 0}, -1,
+                                 std::make_unique<std::unordered_map<std::string, VarEntry>>()};
+
+   quad->addNewTempCounter();
+}
+
+// 2
+void TablaSimbolos::addParameterVarsToDir() {
+  addVarsToDir(currentFuncDecl, parameters);
+  for (VarEntry par : parameters) {
+     (*funcDir)[currentFuncDecl].parameterTable.push_back(par.varType);
+   }
+}
+
+// 5 from FUNCIONES
+void TablaSimbolos::addCurrLVarsToDir() {
+   addVarsToDir(currentFuncDecl, varsForDir);
+   varsForDir.clear(); 
+}
+
+// 6
+void TablaSimbolos::addFuncCont() {
+   (*funcDir)[currentFuncDecl].quadCont = quad->getQuadCont();
+}
+
+// 7
+void TablaSimbolos::addEndFunc() {
+   (*funcDir)[currentFuncDecl].varDir.reset();
+   (*funcDir)[currentFuncDecl].numTemp = quad->getCurrentTempTypes();
+   memoria->resetLocalMemory();
+   quad->addEndFunc();
+   
+   currentFuncDecl = "main";
+   (*tablasDatos).currentFunc = "main";
+}
+
+// LLAMADAS DE FUNCIONES
+// 1
+void TablaSimbolos::verifyFunction(const std::string funcId) {
+   if ((*funcDir).count(funcId) == 0) {
+      std::cout << "ERROR: " + funcId + " no existe\n";
+   }
+   functionCalls.push_back(funcId);
+}
+
+// 2
+void TablaSimbolos::generateEra() {
+   parameterCounter.push_back(0);
+   quad->generateEra(functionCalls.back());
+}
+
+// 3
+void TablaSimbolos::verifyParameterType() {
+   std::string argument = quad->popOperand();
+   std::string argumentType = quad->popType();
+   std::string currentFunc = functionCalls.back();
+
+   int currentParameterCount = parameterCounter.back();
+
+   if (currentParameterCount < (*funcDir)[currentFunc].parameterTable.size()) {
+      if (argumentType != (*funcDir)[currentFunc].parameterTable[currentParameterCount]) {
+         std::cout << "ERROR: mismatching parameter types for func '" + currentFunc + "'\n";
+         std::cout << "Given type: " + argumentType + ", expected type: " + (*funcDir)[currentFunc].parameterTable[currentParameterCount] + "\n";
+         return;
+      }
+
+      quad->generateParameter(argument, "param" + std::to_string(currentParameterCount));
+
+   } else {
+      std::cout << "ERROR: extraneous parameters for func '" + currentFunc + "'\n";
+   }
+}
+
+// 4
+void TablaSimbolos::moveToNextParam(){
+   parameterCounter.back()++;
+}
+
+// 5
+void TablaSimbolos::verifyLastParam(){
+   if (parameterCounter.back() != (*funcDir)[functionCalls.back()].parameterTable.size()) {
+      std::cout << "ERROR: coherence in number of parameters for function call '" + functionCalls.back() + "'\n";
+   }
+   parameterCounter.pop_back();
+}
+
+// 6
+void TablaSimbolos::addGoSub(){
+   std::string currentFunc = functionCalls.back();
+   quad->addGoSub(currentFunc, (*funcDir)[currentFunc].quadCont);
+   // se puede hacer pop aqui porque no necesitamos guardar el funcId para obtener su valor de retorno void mas adelante
+   if ((*funcDir)[currentFunc].returnType == "void") functionCalls.pop_back();
+}
+
+
+// MAIN
+// 2
+void TablaSimbolos::addPrincipalFunc(const std::string principalName) {
+   programName = principalName;
+   (*tablasDatos).programName = programName;
+   (*funcDir)[principalName] = FuncEntry {principalName, "NP", std::vector<std::string>(), {0, 0, 0, 0}, {0, 0, 0, 0}, 0,
+                                 std::make_unique<std::unordered_map<std::string, VarEntry>>()};
+   
+   quad->addNewTempCounter();
+}
+
+// 4
+void TablaSimbolos::saveGlobalVars() {
+   addVarsToDir(programName, varsForDir);
+   varsForDir.clear(); 
+}
+
+// 5
+void TablaSimbolos::addFuncGlobalVar() {
+   if ((*funcDir)[currentFuncDecl].returnType == "void") {
+      return;
+   }
+
+   // mapea todas las variables dentro del directorio de variables
+   if ((*funcDir)[programName].varDir == nullptr) {
+      std::cout << "ERROR: Empty variable directory for function: " << programName << "\n";
+      return;
+   }
+
+   int memAddr = -1;
+   // memory: global, returntype, not temp
+   switch (cubo.typeMap[(*funcDir)[currentFuncDecl].returnType]) {
+      case 0:
+         memAddr = memoria->reserveIntMemory("global", false, 1);
+         break;
+      case 1:
+         memAddr = memoria->reserveFloatMemory("global", false, 1);
+         break;
+      case 2:
+         memAddr = memoria->reserveCharMemory("global", 1);
+         break;
+   }
+
+   if (memAddr == -1) {
+      std::cout << "ERROR: cannot reserve space for function var\n";
+      return;
+   }
+
+   std::string returnType = (*funcDir)[currentFuncDecl].returnType;
+   VarEntry var { currentFuncDecl, returnType, memAddr, {}};
+   (*(*funcDir)[programName].varDir)[var.varName] = var;
+
+   int type = cubo.typeMap[returnType];
+   (*funcDir)[programName].numLVar[type]++;
+}
+
+// 6
+void TablaSimbolos::saveTempsUsed() {
+   (*funcDir)[programName].numTemp = quad->getCurrentTempTypes();
+}
+
+// RETORNO
+// 1 - retorno en declaracion de una funcion
+void TablaSimbolos::saveReturnValue() {
+   std::string result = quad->popOperand();
+   std::string resultType = quad->popType();
+
+   if (result.substr(0, 3) != "err") {
+      if (resultType != (*funcDir)[currentFuncDecl].returnType) {
+         std::cout << "ERROR: function return type not valid for function '" + currentFuncDecl + "'\n";
+      } else {
+         quad->saveReturnValue(result);
+      }
+   } else {
+      std::cout << result;
+   }
+}
+
+// 2 - retorno despues de terminar llamada a una funcion que retorna un valor
+void TablaSimbolos::addReturnValue() {
+   std::string currentFunc = functionCalls.back();
+   quad->addReturnValue(currentFunc, (*funcDir)[currentFunc].returnType);
+   functionCalls.pop_back();
+}
+
+
+void TablaSimbolos::printData() {
+   std::cout << "FUNC_DIR\n";
+   for (auto &f_entry : (*funcDir)) {
+
+     std::cout << f_entry.second.quadCont << " " << f_entry.first << ": " << f_entry.second.returnType << "\n";
+     std::cout << "Signature: ";
+     for (std::string par : f_entry.second.parameterTable) {
+        std::cout << par << ", ";
+     }
+     
+     std::cout << std::endl;
+     std::cout << "\nLocal int vars (" << f_entry.second.numLVar[0] << ") - ";
+     std::cout << "\nLocal float vars (" << f_entry.second.numLVar[1] << ") - ";
+      std::cout << "\nTemp ints used (" << f_entry.second.numTemp[0] << ") - ";
+
+     /*
+     if (f_entry.second.varDir) {
+       for (auto &v_entry : *(f_entry.second.varDir)) {
+         std::cout << v_entry.second.varType << ": " << v_entry.second.varName << ", ";
+       }
+     }
+     */
+     
+     std::cout << "\n\n";
+   }
+   
+}
