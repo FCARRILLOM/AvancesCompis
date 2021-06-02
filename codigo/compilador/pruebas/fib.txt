@@ -6,7 +6,7 @@ principal() {
 	escribe("Cantidad de elementos de la serie fibonacci:" );
 	lee(x);
 
-	int : f[x];
+	int : f[50];
 	f[0] = 0;
 	f[1] = 1;
 
