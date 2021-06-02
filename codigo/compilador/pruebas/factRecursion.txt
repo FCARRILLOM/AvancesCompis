@@ -1,4 +1,4 @@
-programa fibonacci;
+programa factorial;
 variables
     int : x, res;
 

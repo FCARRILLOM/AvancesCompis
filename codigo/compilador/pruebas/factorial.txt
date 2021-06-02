@@ -1,4 +1,4 @@
-programa fibonacci;
+programa factorial;
 variables
     int : x, i, res;
 
@@ -10,6 +10,6 @@ principal() {
 	desde i = 2 hasta i <= x hacer{
 		res = res * i;
 	}
-	
+
 	escribe("Solución: ", res);
 }
