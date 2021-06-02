@@ -198,7 +198,6 @@ void Quad::generateIntermediateCode() {
         outFile << funcData.numLVar[0] << ", ";
         outFile << funcData.numLVar[1] << ", ";
         outFile << funcData.numLVar[2] << ", ";
-        outFile << funcData.numLVar[3] << ", ";
         // temps used
         outFile << funcData.numTemp[0] << ", ";
         outFile << funcData.numTemp[1]<< ", ";
@@ -222,7 +221,7 @@ void Quad::generateIntermediateCode() {
 
 void Quad::clearQuad() {
     addQuad({"END", "-", "-", "-"});
-    printData();
+    //printData();
     generateIntermediateCode();
     sOperators.clear();
     sOperands.clear();
@@ -348,6 +347,25 @@ void Quad::removeFromStackAssign() {
         addAssignQuad();
     } 
 }
+
+// ACCESO ATRIBUTOS DE CLASES
+// 1
+void Quad::checkValidAttribute(std::string attributeName) {
+    std::string operand = sOperands.back();
+    sOperands.pop_back();
+    std::string operandClass = sTypes.back();
+    sTypes.pop_back();
+
+    std::unordered_map<std::string, ClassEntry> &clasesDir = (*tablasDatos).clasesDir;
+    ClassEntry varClass =  clasesDir[operandClass];
+    std::string attributeType = varClass.varTable[attributeName];
+
+    std::string completeVariable = operand + "." + attributeName;
+
+    sOperands.push_back(completeVariable);
+    sTypes.push_back(attributeType);
+}
+
 
 // ACCESO ARREGLOS
 // 2
@@ -480,7 +498,7 @@ void Quad::addArrayQuads() {
 
     // (s1*m1 + s2 or s1) + base
     std::string dirBase = std::to_string(currentVar.memoryAddr);
-    if ((*tablasDatos).constDir.count(dirBase) <= 0) {
+    if ((*tablasDatos).constDir.count(dirBase) <= 0) { // reserva valor constante en tabla de ctes.
         int memAddr = memoria->reserveIntMemory("const", false, 1);
         if (memAddr == -1)
             std::cout << "ERROR: cannot reserve memory for const " +  dirBase + " \n";

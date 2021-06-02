@@ -9,8 +9,7 @@ MapaMemoria::MapaMemoria() {
     globalInt = globalStart;
     globalFloat = globalInt + globalTypeSize;
     globalChar = globalFloat + globalTypeSize;
-    globalObj = globalChar + globalTypeSize;
-    globalTempInt = globalObj + globalTypeSize;
+    globalTempInt = globalChar + globalTypeSize;
     globalTempFloat = globalTempInt + globalTempSize;
     globalTempBool = globalTempFloat + globalTempSize;
 
@@ -21,8 +20,7 @@ MapaMemoria::MapaMemoria() {
     localInt = localStart;
     localFloat = localInt + localTypeSize;
     localChar = localFloat + localTypeSize;
-    localObj = localChar + localTypeSize;
-    localTempInt = localObj + localTypeSize;
+    localTempInt = localChar + localTypeSize;
     localTempFloat = localTempInt + localTempSize;
     localTempBool = localTempFloat + localTempSize;
 
@@ -37,7 +35,6 @@ MapaMemoria::MapaMemoria() {
     constSize = constChar + constTypeSize - constStart;
 }
 
-// TODO: reserve arr memory
 int MapaMemoria::reserveIntMemory(std::string scope, bool temp, int size) {
     int memoryAddr = -1;
 
@@ -156,7 +153,6 @@ void MapaMemoria::resetLocalMemory() {
     localIntMemory = 0;
     localFloatMemory = 0;
     localCharMemory = 0;
-    // object memory??
     localTempIntMemory = 0;
     localTempFloatMemory = 0;
     localTempBoolMemory = 0;

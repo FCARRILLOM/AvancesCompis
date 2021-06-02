@@ -23,7 +23,7 @@ void CPU::parseFile(const std::string fileName) {
     // parse funcDir
     for (std::string entry : funcDirData) {
         std::string name;
-        int quadPos, i, f, c, o, ti, tf, tb;
+        int quadPos, i, f, c, ti, tf, tb;
 
         std::size_t start = 0U, comma = entry.find(",");
         if (comma != std::string::npos) {
@@ -41,7 +41,7 @@ void CPU::parseFile(const std::string fileName) {
         }
 
         std::vector<int> varSizes;
-        for (int a = 0; a < 6; a++) {
+        for (int a = 0; a < 5; a++) {
             comma = entry.find(",");
             if (comma != std::string::npos) {
                 varSizes.push_back(stoi(entry.substr(start, comma - start)));
@@ -52,14 +52,14 @@ void CPU::parseFile(const std::string fileName) {
         }
         varSizes.push_back(stoi(entry)); // push last element after last comma
 
-        if (varSizes.size() != 7) {std::cout << "Invalid var sizes - " << varSizes.size() << "\n";}
-        std::vector<int> lVars = {varSizes[0], varSizes[1], varSizes[2], varSizes[3]};
-        std::vector<int> tempVars = {varSizes[4], varSizes[5], varSizes[6]};
+        if (varSizes.size() != 6) {std::cout << "Invalid var sizes - " << varSizes.size() << "\n";}
+        std::vector<int> lVars = {varSizes[0], varSizes[1], varSizes[2]};
+        std::vector<int> tempVars = {varSizes[3], varSizes[4], varSizes[5]};
 
         FuncEntry tempEntry {quadPos, lVars, tempVars};
         funcDir[name] = tempEntry;
         //std::cout << name << ", " << quadPos << ", " << varSizes[0] << ", " << varSizes[1] << ", " << varSizes[2] << ", " << varSizes[3];
-        //std::cout << ", " << varSizes[4] << ", " << varSizes[5] << ", " << varSizes[6] << "\n";
+        //std::cout << ", " << varSizes[4] << ", " << varSizes[5] << "\n";
         // program name sera sobreescrito y el ultimo dato sera el main ya que se lee al final
         programName = name;
     }
@@ -479,7 +479,7 @@ void CPU::runCode() {
             case 17: { // ERA
                 currentFunc.push_back(quad.oper1);
                 mem.generateERAFunc(funcDir[quad.oper1].numLVar, funcDir[quad.oper1].numTemp);
-                paramCounters.push_back({0, 0, 0, 0});
+                paramCounters.push_back({0, 0, 0});
                 break;
             }
             case 18: { // ENDFUNC

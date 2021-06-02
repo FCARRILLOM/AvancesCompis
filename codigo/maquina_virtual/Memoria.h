@@ -13,12 +13,12 @@ private:
         localStart, localSize,
         constStart, constSize;
 
-    int globalInt, globalFloat, globalChar, globalObj,
+    int globalInt, globalFloat, globalChar,
         globalTempInt, globalTempFloat, globalTempBool,
         globalTypeSize = 2000,
         globalTempSize = 3000;
 
-    int localInt, localFloat, localChar, localObj,
+    int localInt, localFloat, localChar,
         localTempInt, localTempFloat, localTempBool,
         localTypeSize = 2000,
         localTempSize = 3000;
@@ -30,7 +30,6 @@ private:
     std::vector<int> globalIntMemory;
     std::vector<float> globalFloatMemory;
     std::vector<char> globalCharMemory;
-    std::vector<int> globalObjMemory;
     std::vector<int> globalTempIntMemory;
     std::vector<float> globalTempFloatMemory;
     std::vector<bool> globalTempBoolMemory;
@@ -38,7 +37,6 @@ private:
     std::vector<int> localIntMemory;
     std::vector<float> localFloatMemory;
     std::vector<char> localCharMemory;
-    std::vector<int> localObjMemory;
     std::vector<int> localTempIntMemory;
     std::vector<float> localTempFloatMemory;
     std::vector<bool> localTempBoolMemory;
@@ -50,8 +48,8 @@ private:
     // stack de offsets que indica la posicion relativa de las variables en el scope local de la funcion
     // activa en el momento
     std::vector<std::vector<int>> sOffsets {
-        // i   f   c    o    ti   tf   tb
-        {0}, {0}, {0}, {0}, {0}, {0}, {0}
+        // i   f   c   ti   tf   tb
+        {0}, {0}, {0}, {0}, {0}, {0}
     };
 
     // stack que guara los contextos donde se encuentra la memoria actual para cada funcion

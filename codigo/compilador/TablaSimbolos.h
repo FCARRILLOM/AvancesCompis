@@ -12,6 +12,10 @@
 #include "CuboSemantico.h"
 #include "TablasDatos.h"
 
+/*
+
+*/
+
 class TablaSimbolos {
 private:
    std::string programName;
@@ -19,36 +23,42 @@ private:
    // directorio de funciones
    std::unordered_map<std::string, FuncEntry> *funcDir;
 
-   //
+   // directorio de classes
+   std::unordered_map<std::string, ClassEntry> *clasesDir;
+
+   // Referencia a Tabla Datos, donde se guardan datos sobre el Dir. de Funciones, Tabla de variables, etc.
    TablasDatos *tablasDatos;
 
-   // 
+   // Referencia a clase Quad, donde se generan todos los cuádruplos
    Quad *quad;
 
-   //
+   // Referencia al mapa de memoria utilizado para asignar nuevos espacios de memoria
    MapaMemoria *memoria;
 
-   // 
+   // Referencia al cubo semántico utilizado para verificar tipos y operadores 
    CuboSemantico cubo;
 
-   // stack de llamadas a funciones
+   // Stack de llamadas a funciones
    std::vector<std::string> functionCalls;
 
-   // nombre de la funcion que esta siendo declarada en el momento
+   // Nombre de la funcion que esta siendo declarada en el momento
    std::string currentFuncDecl = "main";
 
-   // vector para guardar los parametros declarados en la definicion de una funcion 
+   // Nombre de la clase que esta siendo declarada en el momento
+   std::string currentClassDecl = "main";
+
+   // Vector para guardar los parametros declarados en la definicion de una funcion 
    // ej. int funcion f1(int: x, int y);
    std::vector<VarEntry> parameters;
 
-   // contador de parametros encontrados en la llamada de una funcion
+   // Contador de parametros encontrados en la llamada de una funcion
    std::vector<int> parameterCounter;
 
-   // vector para guardar las variables que son declaradas en bloque VARIABLES dentro de una funcion
+   // Vector para guardar las variables que son declaradas en bloque VARIABLES dentro de una funcion
    // ej. variables ...
    std::vector<VarEntry> varsForDir;
 
-   // guarda el tipo utilizado para declarar una linea de variables en un bloque variables ...
+   // Guarda el tipo utilizado para declarar una linea de variables en un bloque variables ...
    // ej. int var1, var2, var2;
    std::string currentVarType;
 
@@ -56,14 +66,16 @@ private:
    int R;
 
 public:
-   TablaSimbolos(TablasDatos &tablasDatos, std::unordered_map<std::string, FuncEntry> &funcDir, Quad &quad, MapaMemoria& memoria){
+   TablaSimbolos(TablasDatos &tablasDatos, std::unordered_map<std::string, FuncEntry> &funcDir, std::unordered_map<std::string, ClassEntry> &clasesDir, 
+            Quad &quad, MapaMemoria& memoria){
       this->tablasDatos = &tablasDatos;
       this->funcDir = &funcDir;
+      this->clasesDir = &clasesDir;
       this->quad = &quad;
       this->memoria = &memoria;
    }
 
-   // Agrega variables a la tabla de variables de una funcion
+   // Agrega variables declaradas a la tabla de variables de una funcion
    void addVarsToDir(std::string funcId, std::vector<VarEntry> vars);
    
    ///// VARIABLES DECLARADAS DENTRO DEL BLOQUE (variables ...) /////
@@ -96,18 +108,15 @@ public:
    // Inidica si ya existe una funcion en el directorio de funciones con un id
    int funcExists(const std::string funcId);
 
-   // Crea una entrada en el directorio de funciones
    // 1
-   void createFunc(const std::string funcId, const std::string returnType);
+   void createFunc(std::string funcId, const std::string returnType);
 
-   // Agrega las variables parametro en la tabla de variables de su respectiva funcion
-   // 2/3
+   // 2
    void addParameterVarsToDir();
 
    // 4
    void addNumParameters();
 
-   // Agrega todas las variables declaradas a la tabla de variables de su respectiva funcion
    // 5
    void addCurrLVarsToDir();
 
@@ -119,7 +128,8 @@ public:
 
    // LLAMADAS DE FUNCIONES
    // 1
-   void verifyFunction(const std::string funcId);
+   void verifyFunction();
+   void verifyVoidFunction(const std::string funcId);
 
    // 2
    void generateEra();
@@ -135,6 +145,16 @@ public:
 
    // 6
    void addGoSub();
+
+   // DECLARACION DE CLASES
+   // 1
+   void addClass(const std::string className);
+
+   // 2
+   void addVarsToClass();
+
+   // 3
+   void endCurrentClassDeclaration();
 
    // MAIN
    // 2

@@ -15,7 +15,7 @@ TablasDatos tablasDatos;
 MapaMemoria mapa;
 
 Quad quad(tablasDatos, mapa);
-TablaSimbolos tabla(tablasDatos, tablasDatos.funcDir, quad, mapa);
+TablaSimbolos tabla(tablasDatos, tablasDatos.funcDir, tablasDatos.clasesDir, quad, mapa);
 
 %}
 
@@ -42,7 +42,7 @@ TablaSimbolos tabla(tablasDatos, tablasDatos.funcDir, quad, mapa);
 %%
 PROGRAMA		:	programa id_ { quad.savePrincipalLoc(); tabla.addPrincipalFunc($2); } punto_coma DECLARACIONES principal 
 					l_paren r_paren { quad.addGotoPrincipalLoc(); } l_brace ESTATUTOS r_brace 
-					{ tabla.saveTempsUsed(); tabla.printData(); quad.clearQuad(); mapa.printData(); }
+					{ tabla.saveTempsUsed(); quad.clearQuad(); }
 				;
 DECLARACIONES	:	 DECLARACION DECLARACIONES
 				|	/*epsilon*/
@@ -51,12 +51,12 @@ DECLARACION		:	CLASE
 				|	VARIABLES { tabla.saveGlobalVars(); }
 				|	FUNCIONES
 				;
-CLASE			:	clase id_ HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace punto_coma
+CLASE			:	clase id_ { tabla.addClass($2) } HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace { tabla.endCurrentClassDeclaration(); } punto_coma
 				;
 HEREDA			:	hereda id_
 				|	/*epsilon*/
 				;
-ATRIBUTOS		:	atributos VARS
+ATRIBUTOS		:	atributos VARS { tabla.addVarsToClass(); }
 				|	/*epsilon*/
 				;
 METODOS			:	metodos FUNCIONES
@@ -113,7 +113,7 @@ PARAMETROS_		:	coma PARAMETROS
 ASIGNACION		:	id_ { quad.addOperand($1); } ASIG asignador { quad.addOperatorAsig($4); } 
 					EXP { quad.removeFromStackAssign(); } punto_coma
 				;
-ASIG			:	punto id_
+ASIG			:	punto id_ { quad.checkValidAttribute($2); }
 				|	l_bracket { quad.verifyArrayDimensions(); } EXP { quad.getArrayDimensionResult(); } 
 					ASIG_ r_bracket { quad.addArrayQuads(); }
 				|	/*epsilon*/
@@ -121,14 +121,8 @@ ASIG			:	punto id_
 ASIG_			:	coma EXP { quad.getArrayDimensionResult(); }
 				|	/*epsilon*/
 				;
-LLAMADA_VOID 	:	id_ { tabla.verifyFunction($1); } FUNC_ l_paren { tabla.generateEra(); }
+LLAMADA_VOID 	:	id_ { tabla.verifyVoidFunction($1); } l_paren { tabla.generateEra(); }
 					FUNC_PARAM r_paren { tabla.verifyLastParam(); tabla.addGoSub(); } punto_coma
-				;
-LLAMADA_RET 	:	id_ { tabla.verifyFunction($1); } FUNC_ l_paren { tabla.generateEra(); }
-					FUNC_PARAM r_paren { tabla.verifyLastParam(); tabla.addGoSub(); }
-				;
-FUNC_			: 	punto id_
-				|	/*epsilon*/
 				;
 FUNC_PARAM		:	EXP { tabla.verifyParameterType(); tabla.moveToNextParam(); } FUNC_PARAM_
 				|	/*epsilon*/
@@ -199,8 +193,22 @@ T_				:	mult { quad.addOperatorMultDiv($1); } T
 				;
 F				:	l_paren { quad.addFalseBottom(); } EXP_Q r_paren { quad.removeFalseBottom(); }
 				|	CTE
-				|	id_ { quad.addOperand($1); } ASIG
-				|	LLAMADA_RET { tabla.addReturnValue(); }
+				|	id_ { quad.addOperand($1); } ID_A
+				;
+ID_A			: 	ID_ATTR LLAMADA_RET
+				|	l_bracket { quad.verifyArrayDimensions(); } EXP { quad.getArrayDimensionResult(); } 
+					ID_ARR r_bracket { quad.addArrayQuads(); }
+				| 	/*epsilon*/
+				;
+ID_ARR			:	coma EXP { quad.getArrayDimensionResult(); }
+				|	/*epsilon*/
+				;
+ID_ATTR			: 	punto id_ { quad.checkValidAttribute($2); }
+				|	/*epsilon*/
+				;
+LLAMADA_RET 	:	l_paren { tabla.verifyFunction(); tabla.generateEra(); }
+					FUNC_PARAM r_paren { tabla.verifyLastParam(); tabla.addGoSub(); tabla.addReturnValue(); }
+				|   /*epsilon*/
 				;
 CTE				:	cte_int { quad.addConstOperand(std::to_string($1), "int"); }
 				|	cte_float { quad.addConstOperand(std::to_string($1), "float"); }

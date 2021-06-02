@@ -24,10 +24,16 @@ void TablaSimbolos::addVarsToDir(std::string funcId, std::vector<VarEntry> vars)
       }
 
       int type = cubo.typeMap[var.varType];
-      if (scope == "global")
-         (*funcDir)[programName].numLVar[type] += size;
-      else 
-         (*funcDir)[currentFuncDecl].numLVar[type] += size;
+
+      // special case for custom types
+      if (type == 0 && var.varType != "int") type = 4;
+
+      if (type != 4) {
+         if (scope == "global")
+            (*funcDir)[programName].numLVar[type] += size;
+         else 
+            (*funcDir)[currentFuncDecl].numLVar[type] += size;
+      }
 
       switch (type) {
          case 0: {
@@ -42,28 +48,39 @@ void TablaSimbolos::addVarsToDir(std::string funcId, std::vector<VarEntry> vars)
             memAddr = memoria->reserveCharMemory(scope, size);
             break;
          }
+         case 4: {
+            // checar que exista clase
+            if ((*clasesDir).count(var.varType) == 0) { 
+               std::cout << "ERROR: Clase no existe\n"; 
+               return;
+            }
+
+            std::string className = var.varType;
+            ClassEntry &classEntry = (*clasesDir)[className];
+
+            std::vector<VarEntry> classVariables;
+            for (auto classVar : classEntry.varTable) {
+               classVariables.push_back({var.varName + "." + classVar.first, classVar.second, -1, {}});
+            }
+
+            // agrega objeto a directorio de funciones pero no ocupa memoria
+            (*(*funcDir)[funcId].varDir)[var.varName] = {var.varName, var.varType, -1, {}};
+
+            addVarsToDir(funcId, classVariables);
+         }
       }
 
-      if (memAddr == -1) {
+      if (memAddr == -1 && type != 4) {
          std::cout << "ERROR: cannot reserve space for variable " + var.varName + "\n";
       }
 
      var.memoryAddr = memAddr;
-     //std::cout << "RESERVE var - " << var.varName << " with addr - " << var.memoryAddr << "\n";
+     // delete std::cout << "RESERVE var - " << var.varName << " with addr - " << var.memoryAddr << "\n";
    }
 
    for (VarEntry var : vars) {
      (*(*funcDir)[funcId].varDir)[var.varName] = var;
    }
-
-   /* delete
-   if (currentFuncDecl == "main") {
-      std::cout << programName << ":\n";
-      for (auto var : (*(*funcDir)[funcId].varDir)) {
-         std::cout << var.first << var.second.arrNodes.size() << "\n";
-      }
-   }
-   */
 }
 
 ///// VARIABLES DECLARADAS DENTRO DEL BLOQUE (variables ...) /////
@@ -164,15 +181,19 @@ int TablaSimbolos::funcExists(const std::string funcId) {
 }
 
 // 1
-void TablaSimbolos::createFunc(const std::string funcId, const std::string returnType) {
+void TablaSimbolos::createFunc(std::string funcId, const std::string returnType) {   
+   if (currentClassDecl != "main") {
+      funcId = currentClassDecl + "." + funcId;
+   }
+
    if (funcExists(funcId)) { 
-      std::cout << "Duplicate function name\n"; 
+      std::cout << "ERROR: Nombre de función duplicada\n"; 
       return;
    }
    currentFuncDecl = funcId;
    (*tablasDatos).currentFunc = funcId;
 
-   (*funcDir)[funcId] = FuncEntry {funcId, returnType, std::vector<std::string>(), {0, 0, 0, 0}, {0, 0, 0, 0}, -1,
+   (*funcDir)[funcId] = FuncEntry {funcId, returnType, std::vector<std::string>(), {0, 0, 0}, {0, 0, 0, 0}, -1,
                                  std::make_unique<std::unordered_map<std::string, VarEntry>>()};
 
    quad->addNewTempCounter();
@@ -210,7 +231,34 @@ void TablaSimbolos::addEndFunc() {
 
 // LLAMADAS DE FUNCIONES
 // 1
-void TablaSimbolos::verifyFunction(const std::string funcId) {
+void TablaSimbolos::verifyFunction() {
+   std::string funcId = quad->popOperand();
+   std::string functionType = quad->popType();
+
+   if (funcId.find(".") != std::string::npos) {
+         // sustituir nombre de variable por nombre de clase ej. bmw.a() -> carro.a()
+         std::size_t start = 0U, punto = funcId.find(".");
+         std::string classVariable = funcId.substr(start, punto - start);
+
+         std::string className = "default";
+         std::unordered_map<std::string, VarEntry>& globalVars = *(*funcDir)[programName].varDir;
+         for (auto var : globalVars) {
+            if (var.first == classVariable) {
+               className = var.second.varType;
+            }
+         }
+
+         funcId.erase(start, punto+1);
+         funcId = className + "." + funcId;
+    }
+
+   if ((*funcDir).count(funcId) == 0) {
+      std::cout << "ERROR: " + funcId + " no existe\n";
+   }
+   functionCalls.push_back(funcId);
+}
+
+void TablaSimbolos::verifyVoidFunction(const std::string funcId) {
    if ((*funcDir).count(funcId) == 0) {
       std::cout << "ERROR: " + funcId + " no existe\n";
    }
@@ -266,13 +314,45 @@ void TablaSimbolos::addGoSub(){
    if ((*funcDir)[currentFunc].returnType == "void") functionCalls.pop_back();
 }
 
+// DECLARACION DE CLASES
+// 1
+void TablaSimbolos::addClass(const std::string className) {
+   if ((*clasesDir).count(className) > 0) { 
+      std::cout << "ERROR: Clase duplicada\n"; 
+      return;
+   }
+
+   currentClassDecl = className;
+
+   (*clasesDir)[className] = ClassEntry{ {}, {} };
+}
+
+// 2
+void TablaSimbolos::addVarsToClass() {
+   ClassEntry &classEntry = (*clasesDir)[currentClassDecl];
+
+   for (VarEntry var : varsForDir) {
+      if (classEntry.varTable.count(var.varName) > 0) {
+         std::cout << "ERROR: attributo " + var.varName + " duplicado\n";
+         return;
+      }
+
+      classEntry.varTable[var.varName] = var.varType;
+   }
+   varsForDir.clear(); 
+}
+
+// 3
+void TablaSimbolos::endCurrentClassDeclaration() {
+   currentClassDecl = "main";
+}
 
 // MAIN
 // 2
 void TablaSimbolos::addPrincipalFunc(const std::string principalName) {
    programName = principalName;
    (*tablasDatos).programName = programName;
-   (*funcDir)[principalName] = FuncEntry {principalName, "NP", std::vector<std::string>(), {0, 0, 0, 0}, {0, 0, 0, 0}, 0,
+   (*funcDir)[principalName] = FuncEntry {principalName, "NP", std::vector<std::string>(), {0, 0, 0}, {0, 0, 0, 0}, 0,
                                  std::make_unique<std::unordered_map<std::string, VarEntry>>()};
    
    quad->addNewTempCounter();
@@ -357,24 +437,17 @@ void TablaSimbolos::printData() {
    std::cout << "FUNC_DIR\n";
    for (auto &f_entry : (*funcDir)) {
 
-     std::cout << f_entry.second.quadCont << " " << f_entry.first << ": " << f_entry.second.returnType << "\n";
-     std::cout << "Signature: ";
-     for (std::string par : f_entry.second.parameterTable) {
-        std::cout << par << ", ";
-     }
-     
-     std::cout << std::endl;
-     std::cout << "\nLocal int vars (" << f_entry.second.numLVar[0] << ") - ";
-     std::cout << "\nLocal float vars (" << f_entry.second.numLVar[1] << ") - ";
+      std::cout << f_entry.second.quadCont << " " << f_entry.first << ": " << f_entry.second.returnType << "\n";
+      std::cout << "Signature: ";
+      for (std::string par : f_entry.second.parameterTable) {
+         std::cout << par << ", ";
+      }
+      /*
+      std::cout << std::endl;
+      std::cout << "\nLocal int vars (" << f_entry.second.numLVar[0] << ") - ";
+      std::cout << "\nLocal float vars (" << f_entry.second.numLVar[1] << ") - ";
       std::cout << "\nTemp ints used (" << f_entry.second.numTemp[0] << ") - ";
-
-     /*
-     if (f_entry.second.varDir) {
-       for (auto &v_entry : *(f_entry.second.varDir)) {
-         std::cout << v_entry.second.varType << ": " << v_entry.second.varName << ", ";
-       }
-     }
-     */
+      */
      
      std::cout << "\n\n";
    }

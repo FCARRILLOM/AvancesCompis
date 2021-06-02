@@ -9,62 +9,77 @@
 #include "MapaMemoria.h"
 #include "TablasDatos.h"
 
+/*
+Esta clase se encarga de generar todos los cuádruplos para luego traducirlos a código intermedio
+
+*/
+
 class Quad {
 private:
     CuboSemantico cubo;
+    // Referencia al mapa de memoria que se utilizará para asignar direcciones virtuales a variables
     MapaMemoria *memoria;
+
+    // Referecia a la Tabla de Datos donde se guarda toda la informcacion como Directorio de funciones,
+    // Directorio de clases, tabla de variables y tabla de constantes
     TablasDatos *tablasDatos;
 
-    // vectores que simulan Stacks
     std::vector<std::string> sOperators;
     std::vector<std::string> sOperands;
     std::vector<std::string> sTypes;
     std::vector<int> sJumps;
 
-    // stack que guarda el conteo de temporales utilizadas en cada contexto
+    // Stack que guarda el conteo de temporales utilizadas en cada contexto. Sera necesario para calcular
+    // el ERA de una función
     std::vector<int> sTemps;
 
-    // stack que guarda la los tipos de los temporales utilizados en cada contexto
+    // Stack que guarda la los tipos de los temporales utilizados en cada contexto
     std::vector<std::vector<int>> sTempTypes;
 
-    // vector que simula Queue donde se guardan los quadruplos generados
+    // Vector que simula Queue donde se guardan los cuádruplos generados
     std::vector<std::vector<std::string>> quads;
 
-    // quads con espacios de memoria
+    // Vector donde se guardan los cuádruplos generados con las variables reemplazadas por 
+    // sus direcciones virtuales de memoria.
     std::vector<std::vector<std::string>> memQuads;
 
-    // contador que apunta al siguiente quad
+    // Contador que apunta al siguiente quad
     int quadPtr;
 
-    // guarda los resultados de cada expresion para cada dimensiones [EXP]
+    // Vector que uarda los resultados de cada expresion para cada dimensiones [EXP] para los arreglos
     std::vector<std::string> resultadosDimensiones;
 
+    // Variable que guarda el nombre de la variable tipo arreglo que se acaba de declarar
     std::string currentArrayVariable;
 
+    // Variable que guarda el scope de una variable tipo arreglo que se acaba de declarar
     std::string currentArrayScope;
 
-    // adds a quad to quad list and increments quad counter
+    // Agrega un cuádruplo a la lista de cuádruplos normal y de memoria virtual. También incrementa el contador
+    // de quads.
     void addQuad(const std::vector<std::string> quad);
 
-    // parse pointer variable and get its address (x) -> (1000)
+    // Parsea la dirección virtual tipo pointer y busca la dirección virtual de su tipo interno. (x) -> (1000)
     std::string getPointerAddress(const std::string pointerAddress);
 
-    // removes two operands and a binary arithmetic operator to generate quad, ex. +, A, B, t1
+    // Crea un cuádruplo con un operador binario y dos operandos. ex. +, A, B, t1
     void addArithmeticQuad();
 
-    // removes one operand and an assign operator, ex. =, A, -, B
+    // Crea un cuádruplo de tipo asignacion. ex. =, A, -, B
     void addAssignQuad();
 
-    // retorna siguiente valor disponible e incrementa el contador del avail
+    // Retorna siguiente valor para t disponible e incrementa el contador del avail
     std::string getNextAvail(const std::string type);
 
-    // fills an existing Goto quad with a pending position
+    // Rellena un cuádruplo GOTO con un salto pendiente
     void fillGotoQuad(int position, int newValue);
 
-    // looks for values address in memory
+    // Busca la una variable en las tablas de variables para los scopes local, main y cte.
+    // en caso de que la encuentre regresa su dirección virtual.
     std::string getVariableAddress(const std::string name);
 
-    // writes out intermediate code in obj file
+    // Genera el código intermedio como archivo 'codigo.cmm' recopilando los datos del Directorio de funciones
+    // la tabla de constantes y los cuádruplos
     void generateIntermediateCode();
 
 public:
@@ -75,8 +90,7 @@ public:
         quadPtr = 0;
     }
 
-    // elimina los datos previos de los stacks y vector de quadruplos para empezar el proceso de nuevo
-    // TODO: delete unused function?
+    // Elimina los datos previos de los stacks y vector de quadruplos para empezar el proceso de nuevo
     void clearQuad();
 
     // REGLAS ARITMETICAS tomadas del documento Exp PN and Quad, donde se describen las reglas para generar los cuadruplos
@@ -125,6 +139,10 @@ public:
 
     // 15
     void removeFromStackAssign();
+
+    // ACCESO ATRIBUTOS DE CLASES
+    // 1
+    void checkValidAttribute(std::string attributeName);
 
     // ACCESO ARREGLOS
     // 2
@@ -213,15 +231,19 @@ public:
     void addGotoPrincipalLoc();
 
     // UTILITY
-    // Utility for tabla simbolos (verifying parameter types)
+    // Utilidad para la clase tabla simbolos (verifying parameter types)
+    // habran casos donde se tiene que hacer pop desde Tabla Simbolos
     std::string popOperand();
 
     std::string popType();
 
     int getQuadCont() const;
 
+    // Crea un contador para mantener la cuenta de los temps utilizados en el contexto actual
+    // y lo agrega al stack de contadores
     void addNewTempCounter();
 
+    // Regresa el conteo de las temporales utilizadas en el contexto más reciente.
     std::vector<int> getCurrentTempTypes();
 
 };

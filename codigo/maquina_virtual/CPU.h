@@ -15,7 +15,7 @@ struct FuncEntry {
     // quad counter where it begins
     int quadPos;
 
-    // number of local variables {int, float, char, obj}
+    // number of local variables {int, float, char}
     std::vector<int> numLVar;
 
     // number of temporal variables {int, float, bool}
@@ -51,7 +51,7 @@ public:
     std::map<std::string, std::string> constTable;
 
     // contadores para lectura y asignacion de parametros a variables locales
-    // de una funcion {int, float, char, obj}
+    // de una funcion {int, float, char}
     std::vector<std::vector<int>> paramCounters;
 
     std::vector<QuadEntry> quads;

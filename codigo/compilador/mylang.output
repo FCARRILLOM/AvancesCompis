@@ -1,6 +1,5 @@
 State 15 conflicts: 1 shift/reduce
-State 68 conflicts: 1 reduce/reduce
-State 105 conflicts: 1 reduce/reduce
+State 132 conflicts: 13 reduce/reduce
 
 
 Grammar
@@ -20,252 +19,266 @@ Grammar
     7            | VARIABLES
     8            | FUNCIONES
 
-    9 CLASE: clase id_ HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace punto_coma
+    9 @3: /* empty */
 
-   10 HEREDA: hereda id_
-   11       | /* empty */
+   10 @4: /* empty */
 
-   12 ATRIBUTOS: atributos VARS
-   13          | /* empty */
+   11 CLASE: clase id_ @3 HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace @4 punto_coma
 
-   14 METODOS: metodos FUNCIONES
-   15        | /* empty */
+   12 HEREDA: hereda id_
+   13       | /* empty */
 
-   16 VARIABLES: variables VARS
+   14 ATRIBUTOS: atributos VARS
+   15          | /* empty */
 
-   17 VARS: VAR VARS_
+   16 METODOS: metodos FUNCIONES
+   17        | /* empty */
 
-   18 VARS_: VARS
-   19      | /* empty */
+   18 VARIABLES: variables VARS
 
-   20 @3: /* empty */
+   19 VARS: VAR VARS_
 
-   21 VAR: TIPO_VAR @3 dos_puntos VAR_IDS punto_coma
+   20 VARS_: VARS
+   21      | /* empty */
 
-   22 @4: /* empty */
+   22 @5: /* empty */
 
-   23 VAR_IDS: id_ @4 ARR VAR_IDS_
+   23 VAR: TIPO_VAR @5 dos_puntos VAR_IDS punto_coma
 
-   24 @5: /* empty */
+   24 @6: /* empty */
 
-   25 @6: /* empty */
+   25 VAR_IDS: id_ @6 ARR VAR_IDS_
 
-   26 ARR: l_bracket @5 cte_int @6 ARR_ r_bracket
-   27    | /* empty */
+   26 @7: /* empty */
 
-   28 @7: /* empty */
+   27 @8: /* empty */
 
-   29 ARR_: coma @7 cte_int
-   30     | /* empty */
+   28 ARR: l_bracket @7 cte_int @8 ARR_ r_bracket
+   29    | /* empty */
 
-   31 VAR_IDS_: coma VAR_IDS
-   32         | /* empty */
+   30 @9: /* empty */
 
-   33 TIPO_SIMPLE: n_int
-   34            | n_float
-   35            | n_char
+   31 ARR_: coma @9 cte_int
+   32     | /* empty */
 
-   36 TIPO_VAR: TIPO_SIMPLE
-   37         | id_
+   33 VAR_IDS_: coma VAR_IDS
+   34         | /* empty */
 
-   38 FUNCIONES: FUNCION FUNCIONES_
+   35 TIPO_SIMPLE: n_int
+   36            | n_float
+   37            | n_char
 
-   39 FUNCIONES_: FUNCIONES
-   40           | /* empty */
+   38 TIPO_VAR: TIPO_SIMPLE
+   39         | id_
 
-   41 @8: /* empty */
+   40 FUNCIONES: FUNCION FUNCIONES_
 
-   42 @9: /* empty */
+   41 FUNCIONES_: FUNCIONES
+   42           | /* empty */
 
    43 @10: /* empty */
 
    44 @11: /* empty */
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   45 @12: /* empty */
 
-   46 FUNC_VARIABLES: VARIABLES
-   47               | /* empty */
+   46 @13: /* empty */
 
-   48 TIPO_RET: TIPO_SIMPLE
-   49         | n_void
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
-   50 @12: /* empty */
+   48 FUNC_VARIABLES: VARIABLES
+   49               | /* empty */
 
-   51 PARAMETROS: TIPO_SIMPLE dos_puntos id_ @12 PARAMETROS_
-   52           | /* empty */
+   50 TIPO_RET: TIPO_SIMPLE
+   51         | n_void
 
-   53 PARAMETROS_: coma PARAMETROS
-   54            | /* empty */
+   52 @14: /* empty */
 
-   55 @13: /* empty */
+   53 PARAMETROS: TIPO_SIMPLE dos_puntos id_ @14 PARAMETROS_
+   54           | /* empty */
 
-   56 @14: /* empty */
+   55 PARAMETROS_: coma PARAMETROS
+   56            | /* empty */
 
    57 @15: /* empty */
 
-   58 ASIGNACION: id_ @13 ASIG asignador @14 EXP @15 punto_coma
+   58 @16: /* empty */
 
-   59 ASIG: punto id_
+   59 @17: /* empty */
 
-   60 @16: /* empty */
+   60 ASIGNACION: id_ @15 ASIG asignador @16 EXP @17 punto_coma
 
-   61 @17: /* empty */
+   61 ASIG: punto id_
 
-   62 ASIG: l_bracket @16 EXP @17 ASIG_ r_bracket
-   63     | /* empty */
+   62 @18: /* empty */
 
-   64 ASIG_: coma EXP
-   65      | /* empty */
+   63 @19: /* empty */
 
-   66 @18: /* empty */
+   64 ASIG: l_bracket @18 EXP @19 ASIG_ r_bracket
+   65     | /* empty */
 
-   67 @19: /* empty */
+   66 ASIG_: coma EXP
+   67      | /* empty */
 
    68 @20: /* empty */
 
-   69 LLAMADA_VOID: id_ @18 FUNC_ l_paren @19 FUNC_PARAM r_paren @20 punto_coma
+   69 @21: /* empty */
 
-   70 @21: /* empty */
+   70 @22: /* empty */
 
-   71 @22: /* empty */
+   71 LLAMADA_VOID: id_ @20 l_paren @21 FUNC_PARAM r_paren @22 punto_coma
 
-   72 LLAMADA_RET: id_ @21 FUNC_ l_paren @22 FUNC_PARAM r_paren
+   72 @23: /* empty */
 
-   73 FUNC_: punto id_
-   74      | /* empty */
+   73 FUNC_PARAM: EXP @23 FUNC_PARAM_
+   74           | /* empty */
 
-   75 @23: /* empty */
+   75 FUNC_PARAM_: coma FUNC_PARAM
+   76            | /* empty */
 
-   76 FUNC_PARAM: EXP @23 FUNC_PARAM_
-   77           | /* empty */
+   77 @24: /* empty */
 
-   78 FUNC_PARAM_: coma FUNC_PARAM
-   79            | /* empty */
+   78 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
 
-   80 @24: /* empty */
+   79 @25: /* empty */
 
-   81 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
+   80 DECISION_: sino @25 l_brace ESTATUTOS r_brace
+   81          | /* empty */
 
-   82 @25: /* empty */
+   82 @26: /* empty */
 
-   83 DECISION_: sino @25 l_brace ESTATUTOS r_brace
-   84          | /* empty */
+   83 @27: /* empty */
 
-   85 @26: /* empty */
+   84 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
 
-   86 @27: /* empty */
+   85 @28: /* empty */
 
-   87 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
+   86 @29: /* empty */
 
-   88 @28: /* empty */
+   87 @30: /* empty */
 
-   89 @29: /* empty */
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
 
-   90 @30: /* empty */
+   89 ESCRITURA: escribe l_paren PRINTABLE r_paren punto_coma
 
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
+   90 PRINTABLE: E PRINTABLE_
 
-   92 ESCRITURA: escribe l_paren PRINTABLE r_paren punto_coma
+   91 PRINTABLE_: coma PRINTABLE
+   92           | /* empty */
 
-   93 PRINTABLE: E PRINTABLE_
+   93 E: cte_string
+   94  | EXP
 
-   94 PRINTABLE_: coma PRINTABLE
-   95           | /* empty */
+   95 LECTURA: lee l_paren READABLE r_paren punto_coma
 
-   96 E: cte_string
-   97  | EXP
+   96 @31: /* empty */
 
-   98 LECTURA: lee l_paren READABLE r_paren punto_coma
+   97 READABLE: id_ @31 READABLE_
 
-   99 @31: /* empty */
+   98 READABLE_: coma READABLE
+   99          | /* empty */
 
-  100 READABLE: id_ @31 READABLE_
+  100 @32: /* empty */
 
-  101 READABLE_: coma READABLE
-  102          | /* empty */
+  101 RETORNO: regresa l_paren EXP r_paren @32 punto_coma
 
-  103 @32: /* empty */
+  102 EXP: EXP_Q
 
-  104 RETORNO: regresa l_paren EXP r_paren @32 punto_coma
+  103 @33: /* empty */
 
-  105 EXP: EXP_Q
+  104 EXP_Q: T_EXP @33 EXP_
 
-  106 @33: /* empty */
+  105 @34: /* empty */
 
-  107 EXP_Q: T_EXP @33 EXP_
+  106 EXP_: op_or @34 EXP
+  107     | /* empty */
 
-  108 @34: /* empty */
+  108 @35: /* empty */
 
-  109 EXP_: op_or @34 EXP
-  110     | /* empty */
+  109 T_EXP: G_EXP @35 T_EXP_
 
-  111 @35: /* empty */
+  110 @36: /* empty */
 
-  112 T_EXP: G_EXP @35 T_EXP_
+  111 T_EXP_: op_and @36 T_EXP
+  112       | /* empty */
 
-  113 @36: /* empty */
+  113 G_EXP: M_EXP G_EXP_
 
-  114 T_EXP_: op_and @36 T_EXP
+  114 G_EXP_: OPER_REL M_EXP
   115       | /* empty */
 
-  116 G_EXP: M_EXP G_EXP_
+  116 OPER_REL: op_rel
 
-  117 G_EXP_: OPER_REL M_EXP
-  118       | /* empty */
+  117 @37: /* empty */
 
-  119 OPER_REL: op_rel
+  118 M_EXP: T @37 M_EXP_
 
-  120 @37: /* empty */
+  119 @38: /* empty */
 
-  121 M_EXP: T @37 M_EXP_
+  120 M_EXP_: mas @38 M_EXP
 
-  122 @38: /* empty */
+  121 @39: /* empty */
 
-  123 M_EXP_: mas @38 M_EXP
+  122 M_EXP_: menos @39 M_EXP
+  123       | /* empty */
 
-  124 @39: /* empty */
+  124 @40: /* empty */
 
-  125 M_EXP_: menos @39 M_EXP
-  126       | /* empty */
+  125 T: F @40 T_
 
-  127 @40: /* empty */
+  126 @41: /* empty */
 
-  128 T: F @40 T_
+  127 T_: mult @41 T
 
-  129 @41: /* empty */
+  128 @42: /* empty */
 
-  130 T_: mult @41 T
+  129 T_: divi @42 T
+  130   | /* empty */
 
-  131 @42: /* empty */
+  131 @43: /* empty */
 
-  132 T_: divi @42 T
-  133   | /* empty */
+  132 F: l_paren @43 EXP_Q r_paren
+  133  | CTE
 
-  134 @43: /* empty */
+  134 @44: /* empty */
 
-  135 F: l_paren @43 EXP_Q r_paren
-  136  | CTE
+  135 F: id_ @44 ID_A
 
-  137 @44: /* empty */
+  136 ID_A: ID_ATTR LLAMADA_RET
 
-  138 F: id_ @44 ASIG
-  139  | LLAMADA_RET
+  137 @45: /* empty */
 
-  140 CTE: cte_int
-  141    | cte_float
-  142    | cte_char
+  138 @46: /* empty */
 
-  143 ESTATUTOS: ESTATUTO ESTATUTOS
-  144          | /* empty */
+  139 ID_A: l_bracket @45 EXP @46 ID_ARR r_bracket
+  140     | /* empty */
 
-  145 ESTATUTO: ASIGNACION
-  146         | LLAMADA_VOID
-  147         | LECTURA
-  148         | ESCRITURA
-  149         | DECISION
-  150         | CONDICIONAL
-  151         | NOCONDICIONAL
-  152         | RETORNO
+  141 ID_ARR: coma EXP
+  142       | /* empty */
+
+  143 ID_ATTR: punto id_
+  144        | /* empty */
+
+  145 @47: /* empty */
+
+  146 LLAMADA_RET: l_paren @47 FUNC_PARAM r_paren
+  147            | /* empty */
+
+  148 CTE: cte_int
+  149    | cte_float
+  150    | cte_char
+
+  151 ESTATUTOS: ESTATUTO ESTATUTOS
+  152          | /* empty */
+
+  153 ESTATUTO: ASIGNACION
+  154         | LLAMADA_VOID
+  155         | LECTURA
+  156         | ESCRITURA
+  157         | DECISION
+  158         | CONDICIONAL
+  159         | NOCONDICIONAL
+  160         | RETORNO
 
 
 Terminals, with rules where they appear
@@ -274,49 +287,49 @@ $end (0) 0
 error (256)
 programa (258) 3
 principal (259) 3
-si (260) 81
-entonces (261) 81
-sino (262) 83
-mientras (263) 87
-hacer (264) 87 91
-desde (265) 91
-hasta (266) 91
-clase (267) 9
-hereda (268) 10
-atributos (269) 12
-metodos (270) 14
-variables (271) 16
-funcion (272) 45
-lee (273) 98
-escribe (274) 92
-regresa (275) 104
-n_void (276) 49
-n_int (277) 33
-n_float (278) 34
-n_char (279) 35
-asignador (280) 58 91
-mas (281) 123
-menos (282) 125
-divi (283) 132
-mult (284) 130
-op_and (285) 114
-op_or (286) 109
-op_rel (287) 119
-punto_coma (288) 3 9 21 45 58 69 92 98 104
-dos_puntos (289) 21 51
-coma (290) 29 31 53 64 78 94 101
-punto (291) 59 73
-l_paren (292) 3 45 69 72 81 87 92 98 104 135
-r_paren (293) 3 45 69 72 81 87 92 98 104 135
-l_brace (294) 3 9 45 81 83 87 91
-r_brace (295) 3 9 45 81 83 87 91
-l_bracket (296) 26 62
-r_bracket (297) 26 62
-cte_int (298) 26 29 140
-cte_float (299) 141
-cte_char (300) 142
-cte_string (301) 96
-id_ (302) 3 9 10 23 37 45 51 58 59 69 72 73 91 100 138
+si (260) 78
+entonces (261) 78
+sino (262) 80
+mientras (263) 84
+hacer (264) 84 88
+desde (265) 88
+hasta (266) 88
+clase (267) 11
+hereda (268) 12
+atributos (269) 14
+metodos (270) 16
+variables (271) 18
+funcion (272) 47
+lee (273) 95
+escribe (274) 89
+regresa (275) 101
+n_void (276) 51
+n_int (277) 35
+n_float (278) 36
+n_char (279) 37
+asignador (280) 60 88
+mas (281) 120
+menos (282) 122
+divi (283) 129
+mult (284) 127
+op_and (285) 111
+op_or (286) 106
+op_rel (287) 116
+punto_coma (288) 3 11 23 47 60 71 89 95 101
+dos_puntos (289) 23 53
+coma (290) 31 33 55 66 75 91 98 141
+punto (291) 61 143
+l_paren (292) 3 47 71 78 84 89 95 101 132 146
+r_paren (293) 3 47 71 78 84 89 95 101 132 146
+l_brace (294) 3 11 47 78 80 84 88
+r_brace (295) 3 11 47 78 80 84 88
+l_bracket (296) 28 64 139
+r_bracket (297) 28 64 139
+cte_int (298) 28 31 148
+cte_float (299) 149
+cte_char (300) 150
+cte_string (301) 93
+id_ (302) 3 11 12 25 39 47 53 60 61 71 88 97 135 143
 
 
 Nonterminals, with rules where they appear
@@ -334,203 +347,213 @@ DECLARACIONES (52)
 DECLARACION (53)
     on left: 6 7 8, on right: 4
 CLASE (54)
-    on left: 9, on right: 6
-HEREDA (55)
-    on left: 10 11, on right: 9
-ATRIBUTOS (56)
-    on left: 12 13, on right: 9
-METODOS (57)
-    on left: 14 15, on right: 9
-VARIABLES (58)
-    on left: 16, on right: 7 46
-VARS (59)
-    on left: 17, on right: 12 16 18
-VARS_ (60)
-    on left: 18 19, on right: 17
-VAR (61)
-    on left: 21, on right: 17
-@3 (62)
-    on left: 20, on right: 21
-VAR_IDS (63)
-    on left: 23, on right: 21 31
-@4 (64)
+    on left: 11, on right: 6
+@3 (55)
+    on left: 9, on right: 11
+@4 (56)
+    on left: 10, on right: 11
+HEREDA (57)
+    on left: 12 13, on right: 11
+ATRIBUTOS (58)
+    on left: 14 15, on right: 11
+METODOS (59)
+    on left: 16 17, on right: 11
+VARIABLES (60)
+    on left: 18, on right: 7 48
+VARS (61)
+    on left: 19, on right: 14 18 20
+VARS_ (62)
+    on left: 20 21, on right: 19
+VAR (63)
+    on left: 23, on right: 19
+@5 (64)
     on left: 22, on right: 23
-ARR (65)
-    on left: 26 27, on right: 23
-@5 (66)
-    on left: 24, on right: 26
-@6 (67)
-    on left: 25, on right: 26
-ARR_ (68)
-    on left: 29 30, on right: 26
-@7 (69)
-    on left: 28, on right: 29
-VAR_IDS_ (70)
-    on left: 31 32, on right: 23
-TIPO_SIMPLE (71)
-    on left: 33 34 35, on right: 36 48 51
-TIPO_VAR (72)
-    on left: 36 37, on right: 21
-FUNCIONES (73)
-    on left: 38, on right: 8 14 39
-FUNCIONES_ (74)
-    on left: 39 40, on right: 38
-FUNCION (75)
-    on left: 45, on right: 38
-@8 (76)
-    on left: 41, on right: 45
-@9 (77)
-    on left: 42, on right: 45
+VAR_IDS (65)
+    on left: 25, on right: 23 33
+@6 (66)
+    on left: 24, on right: 25
+ARR (67)
+    on left: 28 29, on right: 25
+@7 (68)
+    on left: 26, on right: 28
+@8 (69)
+    on left: 27, on right: 28
+ARR_ (70)
+    on left: 31 32, on right: 28
+@9 (71)
+    on left: 30, on right: 31
+VAR_IDS_ (72)
+    on left: 33 34, on right: 25
+TIPO_SIMPLE (73)
+    on left: 35 36 37, on right: 38 50 53
+TIPO_VAR (74)
+    on left: 38 39, on right: 23
+FUNCIONES (75)
+    on left: 40, on right: 8 16 41
+FUNCIONES_ (76)
+    on left: 41 42, on right: 40
+FUNCION (77)
+    on left: 47, on right: 40
 @10 (78)
-    on left: 43, on right: 45
+    on left: 43, on right: 47
 @11 (79)
-    on left: 44, on right: 45
-FUNC_VARIABLES (80)
-    on left: 46 47, on right: 45
-TIPO_RET (81)
-    on left: 48 49, on right: 45
-PARAMETROS (82)
-    on left: 51 52, on right: 45 53
-@12 (83)
-    on left: 50, on right: 51
-PARAMETROS_ (84)
-    on left: 53 54, on right: 51
-ASIGNACION (85)
-    on left: 58, on right: 145
-@13 (86)
-    on left: 55, on right: 58
-@14 (87)
-    on left: 56, on right: 58
+    on left: 44, on right: 47
+@12 (80)
+    on left: 45, on right: 47
+@13 (81)
+    on left: 46, on right: 47
+FUNC_VARIABLES (82)
+    on left: 48 49, on right: 47
+TIPO_RET (83)
+    on left: 50 51, on right: 47
+PARAMETROS (84)
+    on left: 53 54, on right: 47 55
+@14 (85)
+    on left: 52, on right: 53
+PARAMETROS_ (86)
+    on left: 55 56, on right: 53
+ASIGNACION (87)
+    on left: 60, on right: 153
 @15 (88)
-    on left: 57, on right: 58
-ASIG (89)
-    on left: 59 62 63, on right: 58 138
-@16 (90)
-    on left: 60, on right: 62
-@17 (91)
-    on left: 61, on right: 62
-ASIG_ (92)
-    on left: 64 65, on right: 62
-LLAMADA_VOID (93)
-    on left: 69, on right: 146
-@18 (94)
-    on left: 66, on right: 69
-@19 (95)
-    on left: 67, on right: 69
+    on left: 57, on right: 60
+@16 (89)
+    on left: 58, on right: 60
+@17 (90)
+    on left: 59, on right: 60
+ASIG (91)
+    on left: 61 64 65, on right: 60
+@18 (92)
+    on left: 62, on right: 64
+@19 (93)
+    on left: 63, on right: 64
+ASIG_ (94)
+    on left: 66 67, on right: 64
+LLAMADA_VOID (95)
+    on left: 71, on right: 154
 @20 (96)
-    on left: 68, on right: 69
-LLAMADA_RET (97)
-    on left: 72, on right: 139
-@21 (98)
-    on left: 70, on right: 72
-@22 (99)
-    on left: 71, on right: 72
-FUNC_ (100)
-    on left: 73 74, on right: 69 72
-FUNC_PARAM (101)
-    on left: 76 77, on right: 69 72 78
-@23 (102)
-    on left: 75, on right: 76
-FUNC_PARAM_ (103)
-    on left: 78 79, on right: 76
-DECISION (104)
-    on left: 81, on right: 149
-@24 (105)
-    on left: 80, on right: 81
-DECISION_ (106)
-    on left: 83 84, on right: 81
-@25 (107)
-    on left: 82, on right: 83
-CONDICIONAL (108)
-    on left: 87, on right: 150
-@26 (109)
-    on left: 85, on right: 87
-@27 (110)
-    on left: 86, on right: 87
-NOCONDICIONAL (111)
-    on left: 91, on right: 151
-@28 (112)
-    on left: 88, on right: 91
-@29 (113)
-    on left: 89, on right: 91
-@30 (114)
-    on left: 90, on right: 91
-ESCRITURA (115)
-    on left: 92, on right: 148
-PRINTABLE (116)
-    on left: 93, on right: 92 94
-PRINTABLE_ (117)
-    on left: 94 95, on right: 93
-E (118)
-    on left: 96 97, on right: 93
-LECTURA (119)
-    on left: 98, on right: 147
-READABLE (120)
-    on left: 100, on right: 98 101
-@31 (121)
-    on left: 99, on right: 100
-READABLE_ (122)
-    on left: 101 102, on right: 100
-RETORNO (123)
-    on left: 104, on right: 152
-@32 (124)
+    on left: 68, on right: 71
+@21 (97)
+    on left: 69, on right: 71
+@22 (98)
+    on left: 70, on right: 71
+FUNC_PARAM (99)
+    on left: 73 74, on right: 71 75 146
+@23 (100)
+    on left: 72, on right: 73
+FUNC_PARAM_ (101)
+    on left: 75 76, on right: 73
+DECISION (102)
+    on left: 78, on right: 157
+@24 (103)
+    on left: 77, on right: 78
+DECISION_ (104)
+    on left: 80 81, on right: 78
+@25 (105)
+    on left: 79, on right: 80
+CONDICIONAL (106)
+    on left: 84, on right: 158
+@26 (107)
+    on left: 82, on right: 84
+@27 (108)
+    on left: 83, on right: 84
+NOCONDICIONAL (109)
+    on left: 88, on right: 159
+@28 (110)
+    on left: 85, on right: 88
+@29 (111)
+    on left: 86, on right: 88
+@30 (112)
+    on left: 87, on right: 88
+ESCRITURA (113)
+    on left: 89, on right: 156
+PRINTABLE (114)
+    on left: 90, on right: 89 91
+PRINTABLE_ (115)
+    on left: 91 92, on right: 90
+E (116)
+    on left: 93 94, on right: 90
+LECTURA (117)
+    on left: 95, on right: 155
+READABLE (118)
+    on left: 97, on right: 95 98
+@31 (119)
+    on left: 96, on right: 97
+READABLE_ (120)
+    on left: 98 99, on right: 97
+RETORNO (121)
+    on left: 101, on right: 160
+@32 (122)
+    on left: 100, on right: 101
+EXP (123)
+    on left: 102, on right: 60 64 66 73 78 84 88 94 101 106 139 141
+EXP_Q (124)
+    on left: 104, on right: 102 132
+@33 (125)
     on left: 103, on right: 104
-EXP (125)
-    on left: 105, on right: 58 62 64 76 81 87 91 97 104 109
-EXP_Q (126)
-    on left: 107, on right: 105 135
-@33 (127)
-    on left: 106, on right: 107
-EXP_ (128)
-    on left: 109 110, on right: 107
-@34 (129)
+EXP_ (126)
+    on left: 106 107, on right: 104
+@34 (127)
+    on left: 105, on right: 106
+T_EXP (128)
+    on left: 109, on right: 104 111
+@35 (129)
     on left: 108, on right: 109
-T_EXP (130)
-    on left: 112, on right: 107 114
-@35 (131)
-    on left: 111, on right: 112
-T_EXP_ (132)
-    on left: 114 115, on right: 112
-@36 (133)
-    on left: 113, on right: 114
-G_EXP (134)
-    on left: 116, on right: 112
-G_EXP_ (135)
-    on left: 117 118, on right: 116
-OPER_REL (136)
-    on left: 119, on right: 117
-M_EXP (137)
-    on left: 121, on right: 116 117 123 125
-@37 (138)
-    on left: 120, on right: 121
-M_EXP_ (139)
-    on left: 123 125 126, on right: 121
-@38 (140)
-    on left: 122, on right: 123
-@39 (141)
+T_EXP_ (130)
+    on left: 111 112, on right: 109
+@36 (131)
+    on left: 110, on right: 111
+G_EXP (132)
+    on left: 113, on right: 109
+G_EXP_ (133)
+    on left: 114 115, on right: 113
+OPER_REL (134)
+    on left: 116, on right: 114
+M_EXP (135)
+    on left: 118, on right: 113 114 120 122
+@37 (136)
+    on left: 117, on right: 118
+M_EXP_ (137)
+    on left: 120 122 123, on right: 118
+@38 (138)
+    on left: 119, on right: 120
+@39 (139)
+    on left: 121, on right: 122
+T (140)
+    on left: 125, on right: 118 127 129
+@40 (141)
     on left: 124, on right: 125
-T (142)
-    on left: 128, on right: 121 130 132
-@40 (143)
-    on left: 127, on right: 128
-T_ (144)
-    on left: 130 132 133, on right: 128
-@41 (145)
-    on left: 129, on right: 130
-@42 (146)
+T_ (142)
+    on left: 127 129 130, on right: 125
+@41 (143)
+    on left: 126, on right: 127
+@42 (144)
+    on left: 128, on right: 129
+F (145)
+    on left: 132 133 135, on right: 125
+@43 (146)
     on left: 131, on right: 132
-F (147)
-    on left: 135 136 138 139, on right: 128
-@43 (148)
+@44 (147)
     on left: 134, on right: 135
-@44 (149)
-    on left: 137, on right: 138
-CTE (150)
-    on left: 140 141 142, on right: 136
-ESTATUTOS (151)
-    on left: 143 144, on right: 3 45 81 83 87 91 143
-ESTATUTO (152)
-    on left: 145 146 147 148 149 150 151 152, on right: 143
+ID_A (148)
+    on left: 136 139 140, on right: 135
+@45 (149)
+    on left: 137, on right: 139
+@46 (150)
+    on left: 138, on right: 139
+ID_ARR (151)
+    on left: 141 142, on right: 139
+ID_ATTR (152)
+    on left: 143 144, on right: 136
+LLAMADA_RET (153)
+    on left: 146 147, on right: 136
+@47 (154)
+    on left: 145, on right: 146
+CTE (155)
+    on left: 148 149 150, on right: 133
+ESTATUTOS (156)
+    on left: 151 152, on right: 3 47 78 80 84 88 151
+ESTATUTO (157)
+    on left: 153 154 155 156 157 158 159 160, on right: 151
 
 
 state 0
@@ -599,14 +622,14 @@ state 6
 
 state 7
 
-    9 CLASE: clase . id_ HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace punto_coma
+   11 CLASE: clase . id_ @3 HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace @4 punto_coma
 
     id_  shift, and go to state 16
 
 
 state 8
 
-   16 VARIABLES: variables . VARS
+   18 VARIABLES: variables . VARS
 
     n_int    shift, and go to state 17
     n_float  shift, and go to state 18
@@ -621,7 +644,7 @@ state 8
 
 state 9
 
-   45 FUNCION: funcion . TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   47 FUNCION: funcion . TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
     n_void   shift, and go to state 25
     n_int    shift, and go to state 17
@@ -680,12 +703,12 @@ state 14
 
 state 15
 
-   38 FUNCIONES: FUNCION . FUNCIONES_
+   40 FUNCIONES: FUNCION . FUNCIONES_
 
     funcion  shift, and go to state 9
 
-    funcion   [reduce using rule 40 (FUNCIONES_)]
-    $default  reduce using rule 40 (FUNCIONES_)
+    funcion   [reduce using rule 42 (FUNCIONES_)]
+    $default  reduce using rule 42 (FUNCIONES_)
 
     FUNCIONES   go to state 30
     FUNCIONES_  go to state 31
@@ -694,63 +717,61 @@ state 15
 
 state 16
 
-    9 CLASE: clase id_ . HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace punto_coma
+   11 CLASE: clase id_ . @3 HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace @4 punto_coma
 
-    hereda  shift, and go to state 32
+    $default  reduce using rule 9 (@3)
 
-    $default  reduce using rule 11 (HEREDA)
-
-    HEREDA  go to state 33
+    @3  go to state 32
 
 
 state 17
 
-   33 TIPO_SIMPLE: n_int .
-
-    $default  reduce using rule 33 (TIPO_SIMPLE)
-
-
-state 18
-
-   34 TIPO_SIMPLE: n_float .
-
-    $default  reduce using rule 34 (TIPO_SIMPLE)
-
-
-state 19
-
-   35 TIPO_SIMPLE: n_char .
+   35 TIPO_SIMPLE: n_int .
 
     $default  reduce using rule 35 (TIPO_SIMPLE)
 
 
+state 18
+
+   36 TIPO_SIMPLE: n_float .
+
+    $default  reduce using rule 36 (TIPO_SIMPLE)
+
+
+state 19
+
+   37 TIPO_SIMPLE: n_char .
+
+    $default  reduce using rule 37 (TIPO_SIMPLE)
+
+
 state 20
 
-   37 TIPO_VAR: id_ .
+   39 TIPO_VAR: id_ .
 
-    $default  reduce using rule 37 (TIPO_VAR)
+    $default  reduce using rule 39 (TIPO_VAR)
 
 
 state 21
 
-   16 VARIABLES: variables VARS .
+   18 VARIABLES: variables VARS .
 
-    $default  reduce using rule 16 (VARIABLES)
+    $default  reduce using rule 18 (VARIABLES)
 
 
 state 22
 
-   17 VARS: VAR . VARS_
+   19 VARS: VAR . VARS_
 
     n_int    shift, and go to state 17
     n_float  shift, and go to state 18
     n_char   shift, and go to state 19
     id_      shift, and go to state 20
 
-    $default  reduce using rule 19 (VARS_)
+    $default  reduce using rule 21 (VARS_)
 
-    VARS         go to state 34
-    VARS_        go to state 35
+    VARS         go to state 33
+    VARS_        go to state 34
     VAR          go to state 22
     TIPO_SIMPLE  go to state 23
     TIPO_VAR     go to state 24
@@ -758,46 +779,46 @@ state 22
 
 state 23
 
-   36 TIPO_VAR: TIPO_SIMPLE .
+   38 TIPO_VAR: TIPO_SIMPLE .
 
-    $default  reduce using rule 36 (TIPO_VAR)
+    $default  reduce using rule 38 (TIPO_VAR)
 
 
 state 24
 
-   21 VAR: TIPO_VAR . @3 dos_puntos VAR_IDS punto_coma
+   23 VAR: TIPO_VAR . @5 dos_puntos VAR_IDS punto_coma
 
-    $default  reduce using rule 20 (@3)
+    $default  reduce using rule 22 (@5)
 
-    @3  go to state 36
+    @5  go to state 35
 
 
 state 25
 
-   49 TIPO_RET: n_void .
+   51 TIPO_RET: n_void .
 
-    $default  reduce using rule 49 (TIPO_RET)
+    $default  reduce using rule 51 (TIPO_RET)
 
 
 state 26
 
-   48 TIPO_RET: TIPO_SIMPLE .
+   50 TIPO_RET: TIPO_SIMPLE .
 
-    $default  reduce using rule 48 (TIPO_RET)
+    $default  reduce using rule 50 (TIPO_RET)
 
 
 state 27
 
-   45 FUNCION: funcion TIPO_RET . id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   47 FUNCION: funcion TIPO_RET . id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
-    id_  shift, and go to state 37
+    id_  shift, and go to state 36
 
 
 state 28
 
     3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal . l_paren r_paren @2 l_brace ESTATUTOS r_brace
 
-    l_paren  shift, and go to state 38
+    l_paren  shift, and go to state 37
 
 
 state 29
@@ -809,100 +830,97 @@ state 29
 
 state 30
 
-   39 FUNCIONES_: FUNCIONES .
+   41 FUNCIONES_: FUNCIONES .
 
-    $default  reduce using rule 39 (FUNCIONES_)
+    $default  reduce using rule 41 (FUNCIONES_)
 
 
 state 31
 
-   38 FUNCIONES: FUNCION FUNCIONES_ .
+   40 FUNCIONES: FUNCION FUNCIONES_ .
 
-    $default  reduce using rule 38 (FUNCIONES)
+    $default  reduce using rule 40 (FUNCIONES)
 
 
 state 32
 
-   10 HEREDA: hereda . id_
+   11 CLASE: clase id_ @3 . HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace @4 punto_coma
 
-    id_  shift, and go to state 39
+    hereda  shift, and go to state 38
+
+    $default  reduce using rule 13 (HEREDA)
+
+    HEREDA  go to state 39
 
 
 state 33
 
-    9 CLASE: clase id_ HEREDA . punto_coma l_brace ATRIBUTOS METODOS r_brace punto_coma
+   20 VARS_: VARS .
 
-    punto_coma  shift, and go to state 40
+    $default  reduce using rule 20 (VARS_)
 
 
 state 34
 
-   18 VARS_: VARS .
+   19 VARS: VAR VARS_ .
 
-    $default  reduce using rule 18 (VARS_)
+    $default  reduce using rule 19 (VARS)
 
 
 state 35
 
-   17 VARS: VAR VARS_ .
+   23 VAR: TIPO_VAR @5 . dos_puntos VAR_IDS punto_coma
 
-    $default  reduce using rule 17 (VARS)
+    dos_puntos  shift, and go to state 40
 
 
 state 36
 
-   21 VAR: TIPO_VAR @3 . dos_puntos VAR_IDS punto_coma
+   47 FUNCION: funcion TIPO_RET id_ . @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
-    dos_puntos  shift, and go to state 41
+    $default  reduce using rule 43 (@10)
+
+    @10  go to state 41
 
 
 state 37
 
-   45 FUNCION: funcion TIPO_RET id_ . @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+    3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren . r_paren @2 l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 41 (@8)
-
-    @8  go to state 42
+    r_paren  shift, and go to state 42
 
 
 state 38
 
-    3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren . r_paren @2 l_brace ESTATUTOS r_brace
+   12 HEREDA: hereda . id_
 
-    r_paren  shift, and go to state 43
+    id_  shift, and go to state 43
 
 
 state 39
 
-   10 HEREDA: hereda id_ .
+   11 CLASE: clase id_ @3 HEREDA . punto_coma l_brace ATRIBUTOS METODOS r_brace @4 punto_coma
 
-    $default  reduce using rule 10 (HEREDA)
+    punto_coma  shift, and go to state 44
 
 
 state 40
 
-    9 CLASE: clase id_ HEREDA punto_coma . l_brace ATRIBUTOS METODOS r_brace punto_coma
-
-    l_brace  shift, and go to state 44
-
-
-state 41
-
-   21 VAR: TIPO_VAR @3 dos_puntos . VAR_IDS punto_coma
+   23 VAR: TIPO_VAR @5 dos_puntos . VAR_IDS punto_coma
 
     id_  shift, and go to state 45
 
     VAR_IDS  go to state 46
 
 
-state 42
+state 41
 
-   45 FUNCION: funcion TIPO_RET id_ @8 . l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   47 FUNCION: funcion TIPO_RET id_ @10 . l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
     l_paren  shift, and go to state 47
 
 
-state 43
+state 42
 
     3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren r_paren . @2 l_brace ESTATUTOS r_brace
 
@@ -911,394 +929,392 @@ state 43
     @2  go to state 48
 
 
+state 43
+
+   12 HEREDA: hereda id_ .
+
+    $default  reduce using rule 12 (HEREDA)
+
+
 state 44
 
-    9 CLASE: clase id_ HEREDA punto_coma l_brace . ATRIBUTOS METODOS r_brace punto_coma
+   11 CLASE: clase id_ @3 HEREDA punto_coma . l_brace ATRIBUTOS METODOS r_brace @4 punto_coma
 
-    atributos  shift, and go to state 49
-
-    $default  reduce using rule 13 (ATRIBUTOS)
-
-    ATRIBUTOS  go to state 50
+    l_brace  shift, and go to state 49
 
 
 state 45
 
-   23 VAR_IDS: id_ . @4 ARR VAR_IDS_
+   25 VAR_IDS: id_ . @6 ARR VAR_IDS_
 
-    $default  reduce using rule 22 (@4)
+    $default  reduce using rule 24 (@6)
 
-    @4  go to state 51
+    @6  go to state 50
 
 
 state 46
 
-   21 VAR: TIPO_VAR @3 dos_puntos VAR_IDS . punto_coma
+   23 VAR: TIPO_VAR @5 dos_puntos VAR_IDS . punto_coma
 
-    punto_coma  shift, and go to state 52
+    punto_coma  shift, and go to state 51
 
 
 state 47
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren . @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren . @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 42 (@9)
+    $default  reduce using rule 44 (@11)
 
-    @9  go to state 53
+    @11  go to state 52
 
 
 state 48
 
     3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren r_paren @2 . l_brace ESTATUTOS r_brace
 
-    l_brace  shift, and go to state 54
+    l_brace  shift, and go to state 53
 
 
 state 49
 
-   12 ATRIBUTOS: atributos . VARS
+   11 CLASE: clase id_ @3 HEREDA punto_coma l_brace . ATRIBUTOS METODOS r_brace @4 punto_coma
+
+    atributos  shift, and go to state 54
+
+    $default  reduce using rule 15 (ATRIBUTOS)
+
+    ATRIBUTOS  go to state 55
+
+
+state 50
+
+   25 VAR_IDS: id_ @6 . ARR VAR_IDS_
+
+    l_bracket  shift, and go to state 56
+
+    $default  reduce using rule 29 (ARR)
+
+    ARR  go to state 57
+
+
+state 51
+
+   23 VAR: TIPO_VAR @5 dos_puntos VAR_IDS punto_coma .
+
+    $default  reduce using rule 23 (VAR)
+
+
+state 52
+
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 . PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
+
+    n_int    shift, and go to state 17
+    n_float  shift, and go to state 18
+    n_char   shift, and go to state 19
+
+    $default  reduce using rule 54 (PARAMETROS)
+
+    TIPO_SIMPLE  go to state 58
+    PARAMETROS   go to state 59
+
+
+state 53
+
+    3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren r_paren @2 l_brace . ESTATUTOS r_brace
+
+    si        shift, and go to state 60
+    mientras  shift, and go to state 61
+    desde     shift, and go to state 62
+    lee       shift, and go to state 63
+    escribe   shift, and go to state 64
+    regresa   shift, and go to state 65
+    id_       shift, and go to state 66
+
+    $default  reduce using rule 152 (ESTATUTOS)
+
+    ASIGNACION     go to state 67
+    LLAMADA_VOID   go to state 68
+    DECISION       go to state 69
+    CONDICIONAL    go to state 70
+    NOCONDICIONAL  go to state 71
+    ESCRITURA      go to state 72
+    LECTURA        go to state 73
+    RETORNO        go to state 74
+    ESTATUTOS      go to state 75
+    ESTATUTO       go to state 76
+
+
+state 54
+
+   14 ATRIBUTOS: atributos . VARS
 
     n_int    shift, and go to state 17
     n_float  shift, and go to state 18
     n_char   shift, and go to state 19
     id_      shift, and go to state 20
 
-    VARS         go to state 55
+    VARS         go to state 77
     VAR          go to state 22
     TIPO_SIMPLE  go to state 23
     TIPO_VAR     go to state 24
 
 
-state 50
-
-    9 CLASE: clase id_ HEREDA punto_coma l_brace ATRIBUTOS . METODOS r_brace punto_coma
-
-    metodos  shift, and go to state 56
-
-    $default  reduce using rule 15 (METODOS)
-
-    METODOS  go to state 57
-
-
-state 51
-
-   23 VAR_IDS: id_ @4 . ARR VAR_IDS_
-
-    l_bracket  shift, and go to state 58
-
-    $default  reduce using rule 27 (ARR)
-
-    ARR  go to state 59
-
-
-state 52
-
-   21 VAR: TIPO_VAR @3 dos_puntos VAR_IDS punto_coma .
-
-    $default  reduce using rule 21 (VAR)
-
-
-state 53
-
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 . PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
-
-    n_int    shift, and go to state 17
-    n_float  shift, and go to state 18
-    n_char   shift, and go to state 19
-
-    $default  reduce using rule 52 (PARAMETROS)
-
-    TIPO_SIMPLE  go to state 60
-    PARAMETROS   go to state 61
-
-
-state 54
-
-    3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren r_paren @2 l_brace . ESTATUTOS r_brace
-
-    si        shift, and go to state 62
-    mientras  shift, and go to state 63
-    desde     shift, and go to state 64
-    lee       shift, and go to state 65
-    escribe   shift, and go to state 66
-    regresa   shift, and go to state 67
-    id_       shift, and go to state 68
-
-    $default  reduce using rule 144 (ESTATUTOS)
-
-    ASIGNACION     go to state 69
-    LLAMADA_VOID   go to state 70
-    DECISION       go to state 71
-    CONDICIONAL    go to state 72
-    NOCONDICIONAL  go to state 73
-    ESCRITURA      go to state 74
-    LECTURA        go to state 75
-    RETORNO        go to state 76
-    ESTATUTOS      go to state 77
-    ESTATUTO       go to state 78
-
-
 state 55
 
-   12 ATRIBUTOS: atributos VARS .
+   11 CLASE: clase id_ @3 HEREDA punto_coma l_brace ATRIBUTOS . METODOS r_brace @4 punto_coma
 
-    $default  reduce using rule 12 (ATRIBUTOS)
+    metodos  shift, and go to state 78
+
+    $default  reduce using rule 17 (METODOS)
+
+    METODOS  go to state 79
 
 
 state 56
 
-   14 METODOS: metodos . FUNCIONES
+   28 ARR: l_bracket . @7 cte_int @8 ARR_ r_bracket
 
-    funcion  shift, and go to state 9
+    $default  reduce using rule 26 (@7)
 
-    FUNCIONES  go to state 79
-    FUNCION    go to state 15
+    @7  go to state 80
 
 
 state 57
 
-    9 CLASE: clase id_ HEREDA punto_coma l_brace ATRIBUTOS METODOS . r_brace punto_coma
+   25 VAR_IDS: id_ @6 ARR . VAR_IDS_
 
-    r_brace  shift, and go to state 80
+    coma  shift, and go to state 81
+
+    $default  reduce using rule 34 (VAR_IDS_)
+
+    VAR_IDS_  go to state 82
 
 
 state 58
 
-   26 ARR: l_bracket . @5 cte_int @6 ARR_ r_bracket
+   53 PARAMETROS: TIPO_SIMPLE . dos_puntos id_ @14 PARAMETROS_
 
-    $default  reduce using rule 24 (@5)
-
-    @5  go to state 81
+    dos_puntos  shift, and go to state 83
 
 
 state 59
 
-   23 VAR_IDS: id_ @4 ARR . VAR_IDS_
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS . @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
-    coma  shift, and go to state 82
+    $default  reduce using rule 45 (@12)
 
-    $default  reduce using rule 32 (VAR_IDS_)
-
-    VAR_IDS_  go to state 83
+    @12  go to state 84
 
 
 state 60
 
-   51 PARAMETROS: TIPO_SIMPLE . dos_puntos id_ @12 PARAMETROS_
+   78 DECISION: si . l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
 
-    dos_puntos  shift, and go to state 84
+    l_paren  shift, and go to state 85
 
 
 state 61
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS . @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   84 CONDICIONAL: mientras . @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 43 (@10)
+    $default  reduce using rule 82 (@26)
 
-    @10  go to state 85
+    @26  go to state 86
 
 
 state 62
 
-   81 DECISION: si . l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
+   88 NOCONDICIONAL: desde . id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
 
-    l_paren  shift, and go to state 86
+    id_  shift, and go to state 87
 
 
 state 63
 
-   87 CONDICIONAL: mientras . @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
+   95 LECTURA: lee . l_paren READABLE r_paren punto_coma
 
-    $default  reduce using rule 85 (@26)
-
-    @26  go to state 87
+    l_paren  shift, and go to state 88
 
 
 state 64
 
-   91 NOCONDICIONAL: desde . id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
-
-    id_  shift, and go to state 88
-
-
-state 65
-
-   98 LECTURA: lee . l_paren READABLE r_paren punto_coma
+   89 ESCRITURA: escribe . l_paren PRINTABLE r_paren punto_coma
 
     l_paren  shift, and go to state 89
 
 
-state 66
+state 65
 
-   92 ESCRITURA: escribe . l_paren PRINTABLE r_paren punto_coma
+  101 RETORNO: regresa . l_paren EXP r_paren @32 punto_coma
 
     l_paren  shift, and go to state 90
 
 
+state 66
+
+   60 ASIGNACION: id_ . @15 ASIG asignador @16 EXP @17 punto_coma
+   71 LLAMADA_VOID: id_ . @20 l_paren @21 FUNC_PARAM r_paren @22 punto_coma
+
+    l_paren   reduce using rule 68 (@20)
+    $default  reduce using rule 57 (@15)
+
+    @15  go to state 91
+    @20  go to state 92
+
+
 state 67
 
-  104 RETORNO: regresa . l_paren EXP r_paren @32 punto_coma
+  153 ESTATUTO: ASIGNACION .
 
-    l_paren  shift, and go to state 91
+    $default  reduce using rule 153 (ESTATUTO)
 
 
 state 68
 
-   58 ASIGNACION: id_ . @13 ASIG asignador @14 EXP @15 punto_coma
-   69 LLAMADA_VOID: id_ . @18 FUNC_ l_paren @19 FUNC_PARAM r_paren @20 punto_coma
+  154 ESTATUTO: LLAMADA_VOID .
 
-    punto     reduce using rule 55 (@13)
-    punto     [reduce using rule 66 (@18)]
-    l_paren   reduce using rule 66 (@18)
-    $default  reduce using rule 55 (@13)
-
-    @13  go to state 92
-    @18  go to state 93
+    $default  reduce using rule 154 (ESTATUTO)
 
 
 state 69
 
-  145 ESTATUTO: ASIGNACION .
+  157 ESTATUTO: DECISION .
 
-    $default  reduce using rule 145 (ESTATUTO)
+    $default  reduce using rule 157 (ESTATUTO)
 
 
 state 70
 
-  146 ESTATUTO: LLAMADA_VOID .
+  158 ESTATUTO: CONDICIONAL .
 
-    $default  reduce using rule 146 (ESTATUTO)
+    $default  reduce using rule 158 (ESTATUTO)
 
 
 state 71
 
-  149 ESTATUTO: DECISION .
+  159 ESTATUTO: NOCONDICIONAL .
 
-    $default  reduce using rule 149 (ESTATUTO)
+    $default  reduce using rule 159 (ESTATUTO)
 
 
 state 72
 
-  150 ESTATUTO: CONDICIONAL .
+  156 ESTATUTO: ESCRITURA .
 
-    $default  reduce using rule 150 (ESTATUTO)
+    $default  reduce using rule 156 (ESTATUTO)
 
 
 state 73
 
-  151 ESTATUTO: NOCONDICIONAL .
+  155 ESTATUTO: LECTURA .
 
-    $default  reduce using rule 151 (ESTATUTO)
+    $default  reduce using rule 155 (ESTATUTO)
 
 
 state 74
 
-  148 ESTATUTO: ESCRITURA .
+  160 ESTATUTO: RETORNO .
 
-    $default  reduce using rule 148 (ESTATUTO)
+    $default  reduce using rule 160 (ESTATUTO)
 
 
 state 75
 
-  147 ESTATUTO: LECTURA .
+    3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren r_paren @2 l_brace ESTATUTOS . r_brace
 
-    $default  reduce using rule 147 (ESTATUTO)
+    r_brace  shift, and go to state 93
 
 
 state 76
 
-  152 ESTATUTO: RETORNO .
+  151 ESTATUTOS: ESTATUTO . ESTATUTOS
 
-    $default  reduce using rule 152 (ESTATUTO)
+    si        shift, and go to state 60
+    mientras  shift, and go to state 61
+    desde     shift, and go to state 62
+    lee       shift, and go to state 63
+    escribe   shift, and go to state 64
+    regresa   shift, and go to state 65
+    id_       shift, and go to state 66
+
+    $default  reduce using rule 152 (ESTATUTOS)
+
+    ASIGNACION     go to state 67
+    LLAMADA_VOID   go to state 68
+    DECISION       go to state 69
+    CONDICIONAL    go to state 70
+    NOCONDICIONAL  go to state 71
+    ESCRITURA      go to state 72
+    LECTURA        go to state 73
+    RETORNO        go to state 74
+    ESTATUTOS      go to state 94
+    ESTATUTO       go to state 76
 
 
 state 77
 
-    3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren r_paren @2 l_brace ESTATUTOS . r_brace
+   14 ATRIBUTOS: atributos VARS .
 
-    r_brace  shift, and go to state 94
+    $default  reduce using rule 14 (ATRIBUTOS)
 
 
 state 78
 
-  143 ESTATUTOS: ESTATUTO . ESTATUTOS
+   16 METODOS: metodos . FUNCIONES
 
-    si        shift, and go to state 62
-    mientras  shift, and go to state 63
-    desde     shift, and go to state 64
-    lee       shift, and go to state 65
-    escribe   shift, and go to state 66
-    regresa   shift, and go to state 67
-    id_       shift, and go to state 68
+    funcion  shift, and go to state 9
 
-    $default  reduce using rule 144 (ESTATUTOS)
-
-    ASIGNACION     go to state 69
-    LLAMADA_VOID   go to state 70
-    DECISION       go to state 71
-    CONDICIONAL    go to state 72
-    NOCONDICIONAL  go to state 73
-    ESCRITURA      go to state 74
-    LECTURA        go to state 75
-    RETORNO        go to state 76
-    ESTATUTOS      go to state 95
-    ESTATUTO       go to state 78
+    FUNCIONES  go to state 95
+    FUNCION    go to state 15
 
 
 state 79
 
-   14 METODOS: metodos FUNCIONES .
+   11 CLASE: clase id_ @3 HEREDA punto_coma l_brace ATRIBUTOS METODOS . r_brace @4 punto_coma
 
-    $default  reduce using rule 14 (METODOS)
+    r_brace  shift, and go to state 96
 
 
 state 80
 
-    9 CLASE: clase id_ HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace . punto_coma
-
-    punto_coma  shift, and go to state 96
-
-
-state 81
-
-   26 ARR: l_bracket @5 . cte_int @6 ARR_ r_bracket
+   28 ARR: l_bracket @7 . cte_int @8 ARR_ r_bracket
 
     cte_int  shift, and go to state 97
 
 
-state 82
+state 81
 
-   31 VAR_IDS_: coma . VAR_IDS
+   33 VAR_IDS_: coma . VAR_IDS
 
     id_  shift, and go to state 45
 
     VAR_IDS  go to state 98
 
 
+state 82
+
+   25 VAR_IDS: id_ @6 ARR VAR_IDS_ .
+
+    $default  reduce using rule 25 (VAR_IDS)
+
+
 state 83
 
-   23 VAR_IDS: id_ @4 ARR VAR_IDS_ .
-
-    $default  reduce using rule 23 (VAR_IDS)
-
-
-state 84
-
-   51 PARAMETROS: TIPO_SIMPLE dos_puntos . id_ @12 PARAMETROS_
+   53 PARAMETROS: TIPO_SIMPLE dos_puntos . id_ @14 PARAMETROS_
 
     id_  shift, and go to state 99
 
 
-state 85
+state 84
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 . r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 . r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
     r_paren  shift, and go to state 100
 
 
-state 86
+state 85
 
-   81 DECISION: si l_paren . EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
+   78 DECISION: si l_paren . EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -1306,67 +1322,65 @@ state 86
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    EXP          go to state 107
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    EXP    go to state 106
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
+
+
+state 86
+
+   84 CONDICIONAL: mientras @26 . l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
+
+    l_paren  shift, and go to state 114
 
 
 state 87
 
-   87 CONDICIONAL: mientras @26 . l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
+   88 NOCONDICIONAL: desde id_ . asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
 
-    l_paren  shift, and go to state 115
+    asignador  shift, and go to state 115
 
 
 state 88
 
-   91 NOCONDICIONAL: desde id_ . asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
+   95 LECTURA: lee l_paren . READABLE r_paren punto_coma
 
-    asignador  shift, and go to state 116
+    id_  shift, and go to state 116
+
+    READABLE  go to state 117
 
 
 state 89
 
-   98 LECTURA: lee l_paren . READABLE r_paren punto_coma
-
-    id_  shift, and go to state 117
-
-    READABLE  go to state 118
-
-
-state 90
-
-   92 ESCRITURA: escribe l_paren . PRINTABLE r_paren punto_coma
+   89 ESCRITURA: escribe l_paren . PRINTABLE r_paren punto_coma
 
     l_paren     shift, and go to state 101
     cte_int     shift, and go to state 102
     cte_float   shift, and go to state 103
     cte_char    shift, and go to state 104
-    cte_string  shift, and go to state 119
+    cte_string  shift, and go to state 118
     id_         shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    PRINTABLE    go to state 120
-    E            go to state 121
-    EXP          go to state 122
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    PRINTABLE  go to state 119
+    E          go to state 120
+    EXP        go to state 121
+    EXP_Q      go to state 107
+    T_EXP      go to state 108
+    G_EXP      go to state 109
+    M_EXP      go to state 110
+    T          go to state 111
+    F          go to state 112
+    CTE        go to state 113
 
 
-state 91
+state 90
 
-  104 RETORNO: regresa l_paren . EXP r_paren @32 punto_coma
+  101 RETORNO: regresa l_paren . EXP r_paren @32 punto_coma
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -1374,216 +1388,228 @@ state 91
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    EXP          go to state 123
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    EXP    go to state 122
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
+
+
+state 91
+
+   60 ASIGNACION: id_ @15 . ASIG asignador @16 EXP @17 punto_coma
+
+    punto      shift, and go to state 123
+    l_bracket  shift, and go to state 124
+
+    $default  reduce using rule 65 (ASIG)
+
+    ASIG  go to state 125
 
 
 state 92
 
-   58 ASIGNACION: id_ @13 . ASIG asignador @14 EXP @15 punto_coma
+   71 LLAMADA_VOID: id_ @20 . l_paren @21 FUNC_PARAM r_paren @22 punto_coma
 
-    punto      shift, and go to state 124
-    l_bracket  shift, and go to state 125
-
-    $default  reduce using rule 63 (ASIG)
-
-    ASIG  go to state 126
+    l_paren  shift, and go to state 126
 
 
 state 93
-
-   69 LLAMADA_VOID: id_ @18 . FUNC_ l_paren @19 FUNC_PARAM r_paren @20 punto_coma
-
-    punto  shift, and go to state 127
-
-    $default  reduce using rule 74 (FUNC_)
-
-    FUNC_  go to state 128
-
-
-state 94
 
     3 PROGRAMA: programa id_ @1 punto_coma DECLARACIONES principal l_paren r_paren @2 l_brace ESTATUTOS r_brace .
 
     $default  reduce using rule 3 (PROGRAMA)
 
 
+state 94
+
+  151 ESTATUTOS: ESTATUTO ESTATUTOS .
+
+    $default  reduce using rule 151 (ESTATUTOS)
+
+
 state 95
 
-  143 ESTATUTOS: ESTATUTO ESTATUTOS .
+   16 METODOS: metodos FUNCIONES .
 
-    $default  reduce using rule 143 (ESTATUTOS)
+    $default  reduce using rule 16 (METODOS)
 
 
 state 96
 
-    9 CLASE: clase id_ HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace punto_coma .
+   11 CLASE: clase id_ @3 HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace . @4 punto_coma
 
-    $default  reduce using rule 9 (CLASE)
+    $default  reduce using rule 10 (@4)
+
+    @4  go to state 127
 
 
 state 97
 
-   26 ARR: l_bracket @5 cte_int . @6 ARR_ r_bracket
+   28 ARR: l_bracket @7 cte_int . @8 ARR_ r_bracket
 
-    $default  reduce using rule 25 (@6)
+    $default  reduce using rule 27 (@8)
 
-    @6  go to state 129
+    @8  go to state 128
 
 
 state 98
 
-   31 VAR_IDS_: coma VAR_IDS .
+   33 VAR_IDS_: coma VAR_IDS .
 
-    $default  reduce using rule 31 (VAR_IDS_)
+    $default  reduce using rule 33 (VAR_IDS_)
 
 
 state 99
 
-   51 PARAMETROS: TIPO_SIMPLE dos_puntos id_ . @12 PARAMETROS_
+   53 PARAMETROS: TIPO_SIMPLE dos_puntos id_ . @14 PARAMETROS_
 
-    $default  reduce using rule 50 (@12)
+    $default  reduce using rule 52 (@14)
 
-    @12  go to state 130
+    @14  go to state 129
 
 
 state 100
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren . punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren . punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
-    punto_coma  shift, and go to state 131
+    punto_coma  shift, and go to state 130
 
 
 state 101
 
-  135 F: l_paren . @43 EXP_Q r_paren
+  132 F: l_paren . @43 EXP_Q r_paren
 
-    $default  reduce using rule 134 (@43)
+    $default  reduce using rule 131 (@43)
 
-    @43  go to state 132
+    @43  go to state 131
 
 
 state 102
 
-  140 CTE: cte_int .
+  148 CTE: cte_int .
 
-    $default  reduce using rule 140 (CTE)
+    $default  reduce using rule 148 (CTE)
 
 
 state 103
 
-  141 CTE: cte_float .
+  149 CTE: cte_float .
 
-    $default  reduce using rule 141 (CTE)
+    $default  reduce using rule 149 (CTE)
 
 
 state 104
 
-  142 CTE: cte_char .
+  150 CTE: cte_char .
 
-    $default  reduce using rule 142 (CTE)
+    $default  reduce using rule 150 (CTE)
 
 
 state 105
 
-   72 LLAMADA_RET: id_ . @21 FUNC_ l_paren @22 FUNC_PARAM r_paren
-  138 F: id_ . @44 ASIG
+  135 F: id_ . @44 ID_A
 
-    punto     reduce using rule 70 (@21)
-    punto     [reduce using rule 137 (@44)]
-    l_paren   reduce using rule 70 (@21)
-    $default  reduce using rule 137 (@44)
+    $default  reduce using rule 134 (@44)
 
-    @21  go to state 133
-    @44  go to state 134
+    @44  go to state 132
 
 
 state 106
 
-  139 F: LLAMADA_RET .
+   78 DECISION: si l_paren EXP . r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
 
-    $default  reduce using rule 139 (F)
+    r_paren  shift, and go to state 133
 
 
 state 107
 
-   81 DECISION: si l_paren EXP . r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_
+  102 EXP: EXP_Q .
 
-    r_paren  shift, and go to state 135
+    $default  reduce using rule 102 (EXP)
 
 
 state 108
 
-  105 EXP: EXP_Q .
+  104 EXP_Q: T_EXP . @33 EXP_
 
-    $default  reduce using rule 105 (EXP)
+    $default  reduce using rule 103 (@33)
+
+    @33  go to state 134
 
 
 state 109
 
-  107 EXP_Q: T_EXP . @33 EXP_
+  109 T_EXP: G_EXP . @35 T_EXP_
 
-    $default  reduce using rule 106 (@33)
+    $default  reduce using rule 108 (@35)
 
-    @33  go to state 136
+    @35  go to state 135
 
 
 state 110
 
-  112 T_EXP: G_EXP . @35 T_EXP_
+  113 G_EXP: M_EXP . G_EXP_
 
-    $default  reduce using rule 111 (@35)
+    op_rel  shift, and go to state 136
 
-    @35  go to state 137
+    $default  reduce using rule 115 (G_EXP_)
+
+    G_EXP_    go to state 137
+    OPER_REL  go to state 138
 
 
 state 111
 
-  116 G_EXP: M_EXP . G_EXP_
+  118 M_EXP: T . @37 M_EXP_
 
-    op_rel  shift, and go to state 138
+    $default  reduce using rule 117 (@37)
 
-    $default  reduce using rule 118 (G_EXP_)
-
-    G_EXP_    go to state 139
-    OPER_REL  go to state 140
+    @37  go to state 139
 
 
 state 112
 
-  121 M_EXP: T . @37 M_EXP_
+  125 T: F . @40 T_
 
-    $default  reduce using rule 120 (@37)
+    $default  reduce using rule 124 (@40)
 
-    @37  go to state 141
+    @40  go to state 140
 
 
 state 113
 
-  128 T: F . @40 T_
+  133 F: CTE .
 
-    $default  reduce using rule 127 (@40)
-
-    @40  go to state 142
+    $default  reduce using rule 133 (F)
 
 
 state 114
 
-  136 F: CTE .
+   84 CONDICIONAL: mientras @26 l_paren . EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 136 (F)
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    EXP    go to state 141
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 115
 
-   87 CONDICIONAL: mientras @26 l_paren . EXP r_paren @27 hacer l_brace ESTATUTOS r_brace
+   88 NOCONDICIONAL: desde id_ asignador . EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -1591,255 +1617,251 @@ state 115
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    EXP          go to state 143
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    EXP    go to state 142
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 116
 
-   91 NOCONDICIONAL: desde id_ asignador . EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
+   97 READABLE: id_ . @31 READABLE_
 
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
+    $default  reduce using rule 96 (@31)
 
-    LLAMADA_RET  go to state 106
-    EXP          go to state 144
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    @31  go to state 143
 
 
 state 117
 
-  100 READABLE: id_ . @31 READABLE_
+   95 LECTURA: lee l_paren READABLE . r_paren punto_coma
 
-    $default  reduce using rule 99 (@31)
-
-    @31  go to state 145
+    r_paren  shift, and go to state 144
 
 
 state 118
 
-   98 LECTURA: lee l_paren READABLE . r_paren punto_coma
+   93 E: cte_string .
 
-    r_paren  shift, and go to state 146
+    $default  reduce using rule 93 (E)
 
 
 state 119
 
-   96 E: cte_string .
+   89 ESCRITURA: escribe l_paren PRINTABLE . r_paren punto_coma
 
-    $default  reduce using rule 96 (E)
+    r_paren  shift, and go to state 145
 
 
 state 120
 
-   92 ESCRITURA: escribe l_paren PRINTABLE . r_paren punto_coma
+   90 PRINTABLE: E . PRINTABLE_
 
-    r_paren  shift, and go to state 147
+    coma  shift, and go to state 146
+
+    $default  reduce using rule 92 (PRINTABLE_)
+
+    PRINTABLE_  go to state 147
 
 
 state 121
 
-   93 PRINTABLE: E . PRINTABLE_
+   94 E: EXP .
 
-    coma  shift, and go to state 148
-
-    $default  reduce using rule 95 (PRINTABLE_)
-
-    PRINTABLE_  go to state 149
+    $default  reduce using rule 94 (E)
 
 
 state 122
 
-   97 E: EXP .
+  101 RETORNO: regresa l_paren EXP . r_paren @32 punto_coma
 
-    $default  reduce using rule 97 (E)
+    r_paren  shift, and go to state 148
 
 
 state 123
 
-  104 RETORNO: regresa l_paren EXP . r_paren @32 punto_coma
+   61 ASIG: punto . id_
 
-    r_paren  shift, and go to state 150
+    id_  shift, and go to state 149
 
 
 state 124
 
-   59 ASIG: punto . id_
+   64 ASIG: l_bracket . @18 EXP @19 ASIG_ r_bracket
 
-    id_  shift, and go to state 151
+    $default  reduce using rule 62 (@18)
+
+    @18  go to state 150
 
 
 state 125
 
-   62 ASIG: l_bracket . @16 EXP @17 ASIG_ r_bracket
+   60 ASIGNACION: id_ @15 ASIG . asignador @16 EXP @17 punto_coma
 
-    $default  reduce using rule 60 (@16)
-
-    @16  go to state 152
+    asignador  shift, and go to state 151
 
 
 state 126
 
-   58 ASIGNACION: id_ @13 ASIG . asignador @14 EXP @15 punto_coma
+   71 LLAMADA_VOID: id_ @20 l_paren . @21 FUNC_PARAM r_paren @22 punto_coma
 
-    asignador  shift, and go to state 153
+    $default  reduce using rule 69 (@21)
+
+    @21  go to state 152
 
 
 state 127
 
-   73 FUNC_: punto . id_
+   11 CLASE: clase id_ @3 HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace @4 . punto_coma
 
-    id_  shift, and go to state 154
+    punto_coma  shift, and go to state 153
 
 
 state 128
 
-   69 LLAMADA_VOID: id_ @18 FUNC_ . l_paren @19 FUNC_PARAM r_paren @20 punto_coma
+   28 ARR: l_bracket @7 cte_int @8 . ARR_ r_bracket
 
-    l_paren  shift, and go to state 155
+    coma  shift, and go to state 154
+
+    $default  reduce using rule 32 (ARR_)
+
+    ARR_  go to state 155
 
 
 state 129
 
-   26 ARR: l_bracket @5 cte_int @6 . ARR_ r_bracket
+   53 PARAMETROS: TIPO_SIMPLE dos_puntos id_ @14 . PARAMETROS_
 
     coma  shift, and go to state 156
 
-    $default  reduce using rule 30 (ARR_)
+    $default  reduce using rule 56 (PARAMETROS_)
 
-    ARR_  go to state 157
+    PARAMETROS_  go to state 157
 
 
 state 130
 
-   51 PARAMETROS: TIPO_SIMPLE dos_puntos id_ @12 . PARAMETROS_
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma . FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace
 
-    coma  shift, and go to state 158
+    variables  shift, and go to state 8
 
-    $default  reduce using rule 54 (PARAMETROS_)
+    $default  reduce using rule 49 (FUNC_VARIABLES)
 
-    PARAMETROS_  go to state 159
+    VARIABLES       go to state 158
+    FUNC_VARIABLES  go to state 159
 
 
 state 131
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma . FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace
+  132 F: l_paren @43 . EXP_Q r_paren
 
-    variables  shift, and go to state 8
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
 
-    $default  reduce using rule 47 (FUNC_VARIABLES)
-
-    VARIABLES       go to state 160
-    FUNC_VARIABLES  go to state 161
+    EXP_Q  go to state 160
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 132
 
-  135 F: l_paren @43 . EXP_Q r_paren
+  135 F: id_ @44 . ID_A
 
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
+    punto      shift, and go to state 161
+    l_bracket  shift, and go to state 162
 
-    LLAMADA_RET  go to state 106
-    EXP_Q        go to state 162
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    hacer       reduce using rule 140 (ID_A)
+    hacer       [reduce using rule 144 (ID_ATTR)]
+    hasta       reduce using rule 140 (ID_A)
+    hasta       [reduce using rule 144 (ID_ATTR)]
+    mas         reduce using rule 140 (ID_A)
+    mas         [reduce using rule 144 (ID_ATTR)]
+    menos       reduce using rule 140 (ID_A)
+    menos       [reduce using rule 144 (ID_ATTR)]
+    divi        reduce using rule 140 (ID_A)
+    divi        [reduce using rule 144 (ID_ATTR)]
+    mult        reduce using rule 140 (ID_A)
+    mult        [reduce using rule 144 (ID_ATTR)]
+    op_and      reduce using rule 140 (ID_A)
+    op_and      [reduce using rule 144 (ID_ATTR)]
+    op_or       reduce using rule 140 (ID_A)
+    op_or       [reduce using rule 144 (ID_ATTR)]
+    op_rel      reduce using rule 140 (ID_A)
+    op_rel      [reduce using rule 144 (ID_ATTR)]
+    punto_coma  reduce using rule 140 (ID_A)
+    punto_coma  [reduce using rule 144 (ID_ATTR)]
+    coma        reduce using rule 140 (ID_A)
+    coma        [reduce using rule 144 (ID_ATTR)]
+    l_paren     reduce using rule 144 (ID_ATTR)
+    r_paren     reduce using rule 140 (ID_A)
+    r_paren     [reduce using rule 144 (ID_ATTR)]
+    r_bracket   reduce using rule 140 (ID_A)
+    r_bracket   [reduce using rule 144 (ID_ATTR)]
+    $default    reduce using rule 140 (ID_A)
+
+    ID_A     go to state 163
+    ID_ATTR  go to state 164
 
 
 state 133
 
-   72 LLAMADA_RET: id_ @21 . FUNC_ l_paren @22 FUNC_PARAM r_paren
+   78 DECISION: si l_paren EXP r_paren . @24 entonces l_brace ESTATUTOS r_brace DECISION_
 
-    punto  shift, and go to state 127
-
-    $default  reduce using rule 74 (FUNC_)
-
-    FUNC_  go to state 163
-
-
-state 134
-
-  138 F: id_ @44 . ASIG
-
-    punto      shift, and go to state 124
-    l_bracket  shift, and go to state 125
-
-    $default  reduce using rule 63 (ASIG)
-
-    ASIG  go to state 164
-
-
-state 135
-
-   81 DECISION: si l_paren EXP r_paren . @24 entonces l_brace ESTATUTOS r_brace DECISION_
-
-    $default  reduce using rule 80 (@24)
+    $default  reduce using rule 77 (@24)
 
     @24  go to state 165
 
 
-state 136
+state 134
 
-  107 EXP_Q: T_EXP @33 . EXP_
+  104 EXP_Q: T_EXP @33 . EXP_
 
     op_or  shift, and go to state 166
 
-    $default  reduce using rule 110 (EXP_)
+    $default  reduce using rule 107 (EXP_)
 
     EXP_  go to state 167
 
 
-state 137
+state 135
 
-  112 T_EXP: G_EXP @35 . T_EXP_
+  109 T_EXP: G_EXP @35 . T_EXP_
 
     op_and  shift, and go to state 168
 
-    $default  reduce using rule 115 (T_EXP_)
+    $default  reduce using rule 112 (T_EXP_)
 
     T_EXP_  go to state 169
 
 
+state 136
+
+  116 OPER_REL: op_rel .
+
+    $default  reduce using rule 116 (OPER_REL)
+
+
+state 137
+
+  113 G_EXP: M_EXP G_EXP_ .
+
+    $default  reduce using rule 113 (G_EXP)
+
+
 state 138
 
-  119 OPER_REL: op_rel .
-
-    $default  reduce using rule 119 (OPER_REL)
-
-
-state 139
-
-  116 G_EXP: M_EXP G_EXP_ .
-
-    $default  reduce using rule 116 (G_EXP)
-
-
-state 140
-
-  117 G_EXP_: OPER_REL . M_EXP
+  114 G_EXP_: OPER_REL . M_EXP
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -1847,128 +1869,126 @@ state 140
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    M_EXP        go to state 170
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    M_EXP  go to state 170
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
-state 141
+state 139
 
-  121 M_EXP: T @37 . M_EXP_
+  118 M_EXP: T @37 . M_EXP_
 
     mas    shift, and go to state 171
     menos  shift, and go to state 172
 
-    $default  reduce using rule 126 (M_EXP_)
+    $default  reduce using rule 123 (M_EXP_)
 
     M_EXP_  go to state 173
 
 
-state 142
+state 140
 
-  128 T: F @40 . T_
+  125 T: F @40 . T_
 
     divi  shift, and go to state 174
     mult  shift, and go to state 175
 
-    $default  reduce using rule 133 (T_)
+    $default  reduce using rule 130 (T_)
 
     T_  go to state 176
 
 
-state 143
+state 141
 
-   87 CONDICIONAL: mientras @26 l_paren EXP . r_paren @27 hacer l_brace ESTATUTOS r_brace
+   84 CONDICIONAL: mientras @26 l_paren EXP . r_paren @27 hacer l_brace ESTATUTOS r_brace
 
     r_paren  shift, and go to state 177
 
 
-state 144
+state 142
 
-   91 NOCONDICIONAL: desde id_ asignador EXP . @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
+   88 NOCONDICIONAL: desde id_ asignador EXP . @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 88 (@28)
+    $default  reduce using rule 85 (@28)
 
     @28  go to state 178
 
 
-state 145
+state 143
 
-  100 READABLE: id_ @31 . READABLE_
+   97 READABLE: id_ @31 . READABLE_
 
     coma  shift, and go to state 179
 
-    $default  reduce using rule 102 (READABLE_)
+    $default  reduce using rule 99 (READABLE_)
 
     READABLE_  go to state 180
 
 
-state 146
+state 144
 
-   98 LECTURA: lee l_paren READABLE r_paren . punto_coma
+   95 LECTURA: lee l_paren READABLE r_paren . punto_coma
 
     punto_coma  shift, and go to state 181
 
 
-state 147
+state 145
 
-   92 ESCRITURA: escribe l_paren PRINTABLE r_paren . punto_coma
+   89 ESCRITURA: escribe l_paren PRINTABLE r_paren . punto_coma
 
     punto_coma  shift, and go to state 182
 
 
-state 148
+state 146
 
-   94 PRINTABLE_: coma . PRINTABLE
+   91 PRINTABLE_: coma . PRINTABLE
 
     l_paren     shift, and go to state 101
     cte_int     shift, and go to state 102
     cte_float   shift, and go to state 103
     cte_char    shift, and go to state 104
-    cte_string  shift, and go to state 119
+    cte_string  shift, and go to state 118
     id_         shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    PRINTABLE    go to state 183
-    E            go to state 121
-    EXP          go to state 122
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    PRINTABLE  go to state 183
+    E          go to state 120
+    EXP        go to state 121
+    EXP_Q      go to state 107
+    T_EXP      go to state 108
+    G_EXP      go to state 109
+    M_EXP      go to state 110
+    T          go to state 111
+    F          go to state 112
+    CTE        go to state 113
 
 
-state 149
+state 147
 
-   93 PRINTABLE: E PRINTABLE_ .
+   90 PRINTABLE: E PRINTABLE_ .
 
-    $default  reduce using rule 93 (PRINTABLE)
+    $default  reduce using rule 90 (PRINTABLE)
 
 
-state 150
+state 148
 
-  104 RETORNO: regresa l_paren EXP r_paren . @32 punto_coma
+  101 RETORNO: regresa l_paren EXP r_paren . @32 punto_coma
 
-    $default  reduce using rule 103 (@32)
+    $default  reduce using rule 100 (@32)
 
     @32  go to state 184
 
 
-state 151
+state 149
 
-   59 ASIG: punto id_ .
+   61 ASIG: punto id_ .
 
-    $default  reduce using rule 59 (ASIG)
+    $default  reduce using rule 61 (ASIG)
 
 
-state 152
+state 150
 
-   62 ASIG: l_bracket @16 . EXP @17 ASIG_ r_bracket
+   64 ASIG: l_bracket @18 . EXP @19 ASIG_ r_bracket
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -1976,380 +1996,395 @@ state 152
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    EXP          go to state 185
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    EXP    go to state 185
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
+
+
+state 151
+
+   60 ASIGNACION: id_ @15 ASIG asignador . @16 EXP @17 punto_coma
+
+    $default  reduce using rule 58 (@16)
+
+    @16  go to state 186
+
+
+state 152
+
+   71 LLAMADA_VOID: id_ @20 l_paren @21 . FUNC_PARAM r_paren @22 punto_coma
+
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    $default  reduce using rule 74 (FUNC_PARAM)
+
+    FUNC_PARAM  go to state 187
+    EXP         go to state 188
+    EXP_Q       go to state 107
+    T_EXP       go to state 108
+    G_EXP       go to state 109
+    M_EXP       go to state 110
+    T           go to state 111
+    F           go to state 112
+    CTE         go to state 113
 
 
 state 153
 
-   58 ASIGNACION: id_ @13 ASIG asignador . @14 EXP @15 punto_coma
+   11 CLASE: clase id_ @3 HEREDA punto_coma l_brace ATRIBUTOS METODOS r_brace @4 punto_coma .
 
-    $default  reduce using rule 56 (@14)
-
-    @14  go to state 186
+    $default  reduce using rule 11 (CLASE)
 
 
 state 154
 
-   73 FUNC_: punto id_ .
+   31 ARR_: coma . @9 cte_int
 
-    $default  reduce using rule 73 (FUNC_)
+    $default  reduce using rule 30 (@9)
+
+    @9  go to state 189
 
 
 state 155
 
-   69 LLAMADA_VOID: id_ @18 FUNC_ l_paren . @19 FUNC_PARAM r_paren @20 punto_coma
+   28 ARR: l_bracket @7 cte_int @8 ARR_ . r_bracket
 
-    $default  reduce using rule 67 (@19)
-
-    @19  go to state 187
+    r_bracket  shift, and go to state 190
 
 
 state 156
 
-   29 ARR_: coma . @7 cte_int
-
-    $default  reduce using rule 28 (@7)
-
-    @7  go to state 188
-
-
-state 157
-
-   26 ARR: l_bracket @5 cte_int @6 ARR_ . r_bracket
-
-    r_bracket  shift, and go to state 189
-
-
-state 158
-
-   53 PARAMETROS_: coma . PARAMETROS
+   55 PARAMETROS_: coma . PARAMETROS
 
     n_int    shift, and go to state 17
     n_float  shift, and go to state 18
     n_char   shift, and go to state 19
 
-    $default  reduce using rule 52 (PARAMETROS)
+    $default  reduce using rule 54 (PARAMETROS)
 
-    TIPO_SIMPLE  go to state 60
-    PARAMETROS   go to state 190
+    TIPO_SIMPLE  go to state 58
+    PARAMETROS   go to state 191
+
+
+state 157
+
+   53 PARAMETROS: TIPO_SIMPLE dos_puntos id_ @14 PARAMETROS_ .
+
+    $default  reduce using rule 53 (PARAMETROS)
+
+
+state 158
+
+   48 FUNC_VARIABLES: VARIABLES .
+
+    $default  reduce using rule 48 (FUNC_VARIABLES)
 
 
 state 159
 
-   51 PARAMETROS: TIPO_SIMPLE dos_puntos id_ @12 PARAMETROS_ .
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES . @13 l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 51 (PARAMETROS)
+    $default  reduce using rule 46 (@13)
+
+    @13  go to state 192
 
 
 state 160
 
-   46 FUNC_VARIABLES: VARIABLES .
+  132 F: l_paren @43 EXP_Q . r_paren
 
-    $default  reduce using rule 46 (FUNC_VARIABLES)
+    r_paren  shift, and go to state 193
 
 
 state 161
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES . @11 l_brace ESTATUTOS r_brace
+  143 ID_ATTR: punto . id_
 
-    $default  reduce using rule 44 (@11)
-
-    @11  go to state 191
+    id_  shift, and go to state 194
 
 
 state 162
 
-  135 F: l_paren @43 EXP_Q . r_paren
+  139 ID_A: l_bracket . @45 EXP @46 ID_ARR r_bracket
 
-    r_paren  shift, and go to state 192
+    $default  reduce using rule 137 (@45)
+
+    @45  go to state 195
 
 
 state 163
 
-   72 LLAMADA_RET: id_ @21 FUNC_ . l_paren @22 FUNC_PARAM r_paren
-
-    l_paren  shift, and go to state 193
-
-
-state 164
-
-  138 F: id_ @44 ASIG .
-
-    $default  reduce using rule 138 (F)
-
-
-state 165
-
-   81 DECISION: si l_paren EXP r_paren @24 . entonces l_brace ESTATUTOS r_brace DECISION_
-
-    entonces  shift, and go to state 194
-
-
-state 166
-
-  109 EXP_: op_or . @34 EXP
-
-    $default  reduce using rule 108 (@34)
-
-    @34  go to state 195
-
-
-state 167
-
-  107 EXP_Q: T_EXP @33 EXP_ .
-
-    $default  reduce using rule 107 (EXP_Q)
-
-
-state 168
-
-  114 T_EXP_: op_and . @36 T_EXP
-
-    $default  reduce using rule 113 (@36)
-
-    @36  go to state 196
-
-
-state 169
-
-  112 T_EXP: G_EXP @35 T_EXP_ .
-
-    $default  reduce using rule 112 (T_EXP)
-
-
-state 170
-
-  117 G_EXP_: OPER_REL M_EXP .
-
-    $default  reduce using rule 117 (G_EXP_)
-
-
-state 171
-
-  123 M_EXP_: mas . @38 M_EXP
-
-    $default  reduce using rule 122 (@38)
-
-    @38  go to state 197
-
-
-state 172
-
-  125 M_EXP_: menos . @39 M_EXP
-
-    $default  reduce using rule 124 (@39)
-
-    @39  go to state 198
-
-
-state 173
-
-  121 M_EXP: T @37 M_EXP_ .
-
-    $default  reduce using rule 121 (M_EXP)
-
-
-state 174
-
-  132 T_: divi . @42 T
-
-    $default  reduce using rule 131 (@42)
-
-    @42  go to state 199
-
-
-state 175
-
-  130 T_: mult . @41 T
-
-    $default  reduce using rule 129 (@41)
-
-    @41  go to state 200
-
-
-state 176
-
-  128 T: F @40 T_ .
-
-    $default  reduce using rule 128 (T)
-
-
-state 177
-
-   87 CONDICIONAL: mientras @26 l_paren EXP r_paren . @27 hacer l_brace ESTATUTOS r_brace
-
-    $default  reduce using rule 86 (@27)
-
-    @27  go to state 201
-
-
-state 178
-
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 . hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
-
-    hasta  shift, and go to state 202
-
-
-state 179
-
-  101 READABLE_: coma . READABLE
-
-    id_  shift, and go to state 117
-
-    READABLE  go to state 203
-
-
-state 180
-
-  100 READABLE: id_ @31 READABLE_ .
-
-    $default  reduce using rule 100 (READABLE)
-
-
-state 181
-
-   98 LECTURA: lee l_paren READABLE r_paren punto_coma .
-
-    $default  reduce using rule 98 (LECTURA)
-
-
-state 182
-
-   92 ESCRITURA: escribe l_paren PRINTABLE r_paren punto_coma .
-
-    $default  reduce using rule 92 (ESCRITURA)
-
-
-state 183
-
-   94 PRINTABLE_: coma PRINTABLE .
-
-    $default  reduce using rule 94 (PRINTABLE_)
-
-
-state 184
-
-  104 RETORNO: regresa l_paren EXP r_paren @32 . punto_coma
-
-    punto_coma  shift, and go to state 204
-
-
-state 185
-
-   62 ASIG: l_bracket @16 EXP . @17 ASIG_ r_bracket
-
-    $default  reduce using rule 61 (@17)
-
-    @17  go to state 205
-
-
-state 186
-
-   58 ASIGNACION: id_ @13 ASIG asignador @14 . EXP @15 punto_coma
-
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
-
-    LLAMADA_RET  go to state 106
-    EXP          go to state 206
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
-
-
-state 187
-
-   69 LLAMADA_VOID: id_ @18 FUNC_ l_paren @19 . FUNC_PARAM r_paren @20 punto_coma
-
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
-
-    $default  reduce using rule 77 (FUNC_PARAM)
-
-    LLAMADA_RET  go to state 106
-    FUNC_PARAM   go to state 207
-    EXP          go to state 208
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
-
-
-state 188
-
-   29 ARR_: coma @7 . cte_int
-
-    cte_int  shift, and go to state 209
-
-
-state 189
-
-   26 ARR: l_bracket @5 cte_int @6 ARR_ r_bracket .
-
-    $default  reduce using rule 26 (ARR)
-
-
-state 190
-
-   53 PARAMETROS_: coma PARAMETROS .
-
-    $default  reduce using rule 53 (PARAMETROS_)
-
-
-state 191
-
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 . l_brace ESTATUTOS r_brace
-
-    l_brace  shift, and go to state 210
-
-
-state 192
-
-  135 F: l_paren @43 EXP_Q r_paren .
+  135 F: id_ @44 ID_A .
 
     $default  reduce using rule 135 (F)
 
 
+state 164
+
+  136 ID_A: ID_ATTR . LLAMADA_RET
+
+    l_paren  shift, and go to state 196
+
+    $default  reduce using rule 147 (LLAMADA_RET)
+
+    LLAMADA_RET  go to state 197
+
+
+state 165
+
+   78 DECISION: si l_paren EXP r_paren @24 . entonces l_brace ESTATUTOS r_brace DECISION_
+
+    entonces  shift, and go to state 198
+
+
+state 166
+
+  106 EXP_: op_or . @34 EXP
+
+    $default  reduce using rule 105 (@34)
+
+    @34  go to state 199
+
+
+state 167
+
+  104 EXP_Q: T_EXP @33 EXP_ .
+
+    $default  reduce using rule 104 (EXP_Q)
+
+
+state 168
+
+  111 T_EXP_: op_and . @36 T_EXP
+
+    $default  reduce using rule 110 (@36)
+
+    @36  go to state 200
+
+
+state 169
+
+  109 T_EXP: G_EXP @35 T_EXP_ .
+
+    $default  reduce using rule 109 (T_EXP)
+
+
+state 170
+
+  114 G_EXP_: OPER_REL M_EXP .
+
+    $default  reduce using rule 114 (G_EXP_)
+
+
+state 171
+
+  120 M_EXP_: mas . @38 M_EXP
+
+    $default  reduce using rule 119 (@38)
+
+    @38  go to state 201
+
+
+state 172
+
+  122 M_EXP_: menos . @39 M_EXP
+
+    $default  reduce using rule 121 (@39)
+
+    @39  go to state 202
+
+
+state 173
+
+  118 M_EXP: T @37 M_EXP_ .
+
+    $default  reduce using rule 118 (M_EXP)
+
+
+state 174
+
+  129 T_: divi . @42 T
+
+    $default  reduce using rule 128 (@42)
+
+    @42  go to state 203
+
+
+state 175
+
+  127 T_: mult . @41 T
+
+    $default  reduce using rule 126 (@41)
+
+    @41  go to state 204
+
+
+state 176
+
+  125 T: F @40 T_ .
+
+    $default  reduce using rule 125 (T)
+
+
+state 177
+
+   84 CONDICIONAL: mientras @26 l_paren EXP r_paren . @27 hacer l_brace ESTATUTOS r_brace
+
+    $default  reduce using rule 83 (@27)
+
+    @27  go to state 205
+
+
+state 178
+
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 . hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace
+
+    hasta  shift, and go to state 206
+
+
+state 179
+
+   98 READABLE_: coma . READABLE
+
+    id_  shift, and go to state 116
+
+    READABLE  go to state 207
+
+
+state 180
+
+   97 READABLE: id_ @31 READABLE_ .
+
+    $default  reduce using rule 97 (READABLE)
+
+
+state 181
+
+   95 LECTURA: lee l_paren READABLE r_paren punto_coma .
+
+    $default  reduce using rule 95 (LECTURA)
+
+
+state 182
+
+   89 ESCRITURA: escribe l_paren PRINTABLE r_paren punto_coma .
+
+    $default  reduce using rule 89 (ESCRITURA)
+
+
+state 183
+
+   91 PRINTABLE_: coma PRINTABLE .
+
+    $default  reduce using rule 91 (PRINTABLE_)
+
+
+state 184
+
+  101 RETORNO: regresa l_paren EXP r_paren @32 . punto_coma
+
+    punto_coma  shift, and go to state 208
+
+
+state 185
+
+   64 ASIG: l_bracket @18 EXP . @19 ASIG_ r_bracket
+
+    $default  reduce using rule 63 (@19)
+
+    @19  go to state 209
+
+
+state 186
+
+   60 ASIGNACION: id_ @15 ASIG asignador @16 . EXP @17 punto_coma
+
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    EXP    go to state 210
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
+
+
+state 187
+
+   71 LLAMADA_VOID: id_ @20 l_paren @21 FUNC_PARAM . r_paren @22 punto_coma
+
+    r_paren  shift, and go to state 211
+
+
+state 188
+
+   73 FUNC_PARAM: EXP . @23 FUNC_PARAM_
+
+    $default  reduce using rule 72 (@23)
+
+    @23  go to state 212
+
+
+state 189
+
+   31 ARR_: coma @9 . cte_int
+
+    cte_int  shift, and go to state 213
+
+
+state 190
+
+   28 ARR: l_bracket @7 cte_int @8 ARR_ r_bracket .
+
+    $default  reduce using rule 28 (ARR)
+
+
+state 191
+
+   55 PARAMETROS_: coma PARAMETROS .
+
+    $default  reduce using rule 55 (PARAMETROS_)
+
+
+state 192
+
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 . l_brace ESTATUTOS r_brace
+
+    l_brace  shift, and go to state 214
+
+
 state 193
 
-   72 LLAMADA_RET: id_ @21 FUNC_ l_paren . @22 FUNC_PARAM r_paren
+  132 F: l_paren @43 EXP_Q r_paren .
 
-    $default  reduce using rule 71 (@22)
-
-    @22  go to state 211
+    $default  reduce using rule 132 (F)
 
 
 state 194
 
-   81 DECISION: si l_paren EXP r_paren @24 entonces . l_brace ESTATUTOS r_brace DECISION_
+  143 ID_ATTR: punto id_ .
 
-    l_brace  shift, and go to state 212
+    $default  reduce using rule 143 (ID_ATTR)
 
 
 state 195
 
-  109 EXP_: op_or @34 . EXP
+  139 ID_A: l_bracket @45 . EXP @46 ID_ARR r_bracket
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -2357,73 +2392,42 @@ state 195
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    EXP          go to state 213
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    EXP    go to state 215
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 196
 
-  114 T_EXP_: op_and @36 . T_EXP
+  146 LLAMADA_RET: l_paren . @47 FUNC_PARAM r_paren
 
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
+    $default  reduce using rule 145 (@47)
 
-    LLAMADA_RET  go to state 106
-    T_EXP        go to state 214
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    @47  go to state 216
 
 
 state 197
 
-  123 M_EXP_: mas @38 . M_EXP
+  136 ID_A: ID_ATTR LLAMADA_RET .
 
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
-
-    LLAMADA_RET  go to state 106
-    M_EXP        go to state 215
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    $default  reduce using rule 136 (ID_A)
 
 
 state 198
 
-  125 M_EXP_: menos @39 . M_EXP
+   78 DECISION: si l_paren EXP r_paren @24 entonces . l_brace ESTATUTOS r_brace DECISION_
 
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
-
-    LLAMADA_RET  go to state 106
-    M_EXP        go to state 216
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    l_brace  shift, and go to state 217
 
 
 state 199
 
-  132 T_: divi @42 . T
+  106 EXP_: op_or @34 . EXP
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -2431,15 +2435,19 @@ state 199
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    T            go to state 217
-    F            go to state 113
-    CTE          go to state 114
+    EXP    go to state 218
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 200
 
-  130 T_: mult @41 . T
+  111 T_EXP_: op_and @36 . T_EXP
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -2447,22 +2455,33 @@ state 200
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    T            go to state 218
-    F            go to state 113
-    CTE          go to state 114
+    T_EXP  go to state 219
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 201
 
-   87 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 . hacer l_brace ESTATUTOS r_brace
+  120 M_EXP_: mas @38 . M_EXP
 
-    hacer  shift, and go to state 219
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    M_EXP  go to state 220
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 202
 
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta . EXP @29 hacer @30 l_brace ESTATUTOS r_brace
+  122 M_EXP_: menos @39 . M_EXP
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -2470,348 +2489,275 @@ state 202
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    LLAMADA_RET  go to state 106
-    EXP          go to state 220
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    M_EXP  go to state 221
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 203
 
-  101 READABLE_: coma READABLE .
+  129 T_: divi @42 . T
 
-    $default  reduce using rule 101 (READABLE_)
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    T    go to state 222
+    F    go to state 112
+    CTE  go to state 113
 
 
 state 204
 
-  104 RETORNO: regresa l_paren EXP r_paren @32 punto_coma .
+  127 T_: mult @41 . T
 
-    $default  reduce using rule 104 (RETORNO)
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    T    go to state 223
+    F    go to state 112
+    CTE  go to state 113
 
 
 state 205
 
-   62 ASIG: l_bracket @16 EXP @17 . ASIG_ r_bracket
+   84 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 . hacer l_brace ESTATUTOS r_brace
 
-    coma  shift, and go to state 221
-
-    $default  reduce using rule 65 (ASIG_)
-
-    ASIG_  go to state 222
+    hacer  shift, and go to state 224
 
 
 state 206
 
-   58 ASIGNACION: id_ @13 ASIG asignador @14 EXP . @15 punto_coma
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta . EXP @29 hacer @30 l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 57 (@15)
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
 
-    @15  go to state 223
+    EXP    go to state 225
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 207
 
-   69 LLAMADA_VOID: id_ @18 FUNC_ l_paren @19 FUNC_PARAM . r_paren @20 punto_coma
+   98 READABLE_: coma READABLE .
 
-    r_paren  shift, and go to state 224
+    $default  reduce using rule 98 (READABLE_)
 
 
 state 208
 
-   76 FUNC_PARAM: EXP . @23 FUNC_PARAM_
+  101 RETORNO: regresa l_paren EXP r_paren @32 punto_coma .
 
-    $default  reduce using rule 75 (@23)
-
-    @23  go to state 225
+    $default  reduce using rule 101 (RETORNO)
 
 
 state 209
 
-   29 ARR_: coma @7 cte_int .
+   64 ASIG: l_bracket @18 EXP @19 . ASIG_ r_bracket
 
-    $default  reduce using rule 29 (ARR_)
+    coma  shift, and go to state 226
+
+    $default  reduce using rule 67 (ASIG_)
+
+    ASIG_  go to state 227
 
 
 state 210
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace . ESTATUTOS r_brace
+   60 ASIGNACION: id_ @15 ASIG asignador @16 EXP . @17 punto_coma
 
-    si        shift, and go to state 62
-    mientras  shift, and go to state 63
-    desde     shift, and go to state 64
-    lee       shift, and go to state 65
-    escribe   shift, and go to state 66
-    regresa   shift, and go to state 67
-    id_       shift, and go to state 68
+    $default  reduce using rule 59 (@17)
 
-    $default  reduce using rule 144 (ESTATUTOS)
-
-    ASIGNACION     go to state 69
-    LLAMADA_VOID   go to state 70
-    DECISION       go to state 71
-    CONDICIONAL    go to state 72
-    NOCONDICIONAL  go to state 73
-    ESCRITURA      go to state 74
-    LECTURA        go to state 75
-    RETORNO        go to state 76
-    ESTATUTOS      go to state 226
-    ESTATUTO       go to state 78
+    @17  go to state 228
 
 
 state 211
 
-   72 LLAMADA_RET: id_ @21 FUNC_ l_paren @22 . FUNC_PARAM r_paren
+   71 LLAMADA_VOID: id_ @20 l_paren @21 FUNC_PARAM r_paren . @22 punto_coma
 
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
+    $default  reduce using rule 70 (@22)
 
-    $default  reduce using rule 77 (FUNC_PARAM)
-
-    LLAMADA_RET  go to state 106
-    FUNC_PARAM   go to state 227
-    EXP          go to state 208
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    @22  go to state 229
 
 
 state 212
 
-   81 DECISION: si l_paren EXP r_paren @24 entonces l_brace . ESTATUTOS r_brace DECISION_
+   73 FUNC_PARAM: EXP @23 . FUNC_PARAM_
 
-    si        shift, and go to state 62
-    mientras  shift, and go to state 63
-    desde     shift, and go to state 64
-    lee       shift, and go to state 65
-    escribe   shift, and go to state 66
-    regresa   shift, and go to state 67
-    id_       shift, and go to state 68
+    coma  shift, and go to state 230
 
-    $default  reduce using rule 144 (ESTATUTOS)
+    $default  reduce using rule 76 (FUNC_PARAM_)
 
-    ASIGNACION     go to state 69
-    LLAMADA_VOID   go to state 70
-    DECISION       go to state 71
-    CONDICIONAL    go to state 72
-    NOCONDICIONAL  go to state 73
-    ESCRITURA      go to state 74
-    LECTURA        go to state 75
-    RETORNO        go to state 76
-    ESTATUTOS      go to state 228
-    ESTATUTO       go to state 78
+    FUNC_PARAM_  go to state 231
 
 
 state 213
 
-  109 EXP_: op_or @34 EXP .
+   31 ARR_: coma @9 cte_int .
 
-    $default  reduce using rule 109 (EXP_)
+    $default  reduce using rule 31 (ARR_)
 
 
 state 214
 
-  114 T_EXP_: op_and @36 T_EXP .
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace . ESTATUTOS r_brace
 
-    $default  reduce using rule 114 (T_EXP_)
+    si        shift, and go to state 60
+    mientras  shift, and go to state 61
+    desde     shift, and go to state 62
+    lee       shift, and go to state 63
+    escribe   shift, and go to state 64
+    regresa   shift, and go to state 65
+    id_       shift, and go to state 66
+
+    $default  reduce using rule 152 (ESTATUTOS)
+
+    ASIGNACION     go to state 67
+    LLAMADA_VOID   go to state 68
+    DECISION       go to state 69
+    CONDICIONAL    go to state 70
+    NOCONDICIONAL  go to state 71
+    ESCRITURA      go to state 72
+    LECTURA        go to state 73
+    RETORNO        go to state 74
+    ESTATUTOS      go to state 232
+    ESTATUTO       go to state 76
 
 
 state 215
 
-  123 M_EXP_: mas @38 M_EXP .
+  139 ID_A: l_bracket @45 EXP . @46 ID_ARR r_bracket
 
-    $default  reduce using rule 123 (M_EXP_)
+    $default  reduce using rule 138 (@46)
+
+    @46  go to state 233
 
 
 state 216
 
-  125 M_EXP_: menos @39 M_EXP .
+  146 LLAMADA_RET: l_paren @47 . FUNC_PARAM r_paren
 
-    $default  reduce using rule 125 (M_EXP_)
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    $default  reduce using rule 74 (FUNC_PARAM)
+
+    FUNC_PARAM  go to state 234
+    EXP         go to state 188
+    EXP_Q       go to state 107
+    T_EXP       go to state 108
+    G_EXP       go to state 109
+    M_EXP       go to state 110
+    T           go to state 111
+    F           go to state 112
+    CTE         go to state 113
 
 
 state 217
 
-  132 T_: divi @42 T .
+   78 DECISION: si l_paren EXP r_paren @24 entonces l_brace . ESTATUTOS r_brace DECISION_
 
-    $default  reduce using rule 132 (T_)
+    si        shift, and go to state 60
+    mientras  shift, and go to state 61
+    desde     shift, and go to state 62
+    lee       shift, and go to state 63
+    escribe   shift, and go to state 64
+    regresa   shift, and go to state 65
+    id_       shift, and go to state 66
+
+    $default  reduce using rule 152 (ESTATUTOS)
+
+    ASIGNACION     go to state 67
+    LLAMADA_VOID   go to state 68
+    DECISION       go to state 69
+    CONDICIONAL    go to state 70
+    NOCONDICIONAL  go to state 71
+    ESCRITURA      go to state 72
+    LECTURA        go to state 73
+    RETORNO        go to state 74
+    ESTATUTOS      go to state 235
+    ESTATUTO       go to state 76
 
 
 state 218
 
-  130 T_: mult @41 T .
+  106 EXP_: op_or @34 EXP .
 
-    $default  reduce using rule 130 (T_)
+    $default  reduce using rule 106 (EXP_)
 
 
 state 219
 
-   87 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer . l_brace ESTATUTOS r_brace
+  111 T_EXP_: op_and @36 T_EXP .
 
-    l_brace  shift, and go to state 229
+    $default  reduce using rule 111 (T_EXP_)
 
 
 state 220
 
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP . @29 hacer @30 l_brace ESTATUTOS r_brace
+  120 M_EXP_: mas @38 M_EXP .
 
-    $default  reduce using rule 89 (@29)
-
-    @29  go to state 230
+    $default  reduce using rule 120 (M_EXP_)
 
 
 state 221
 
-   64 ASIG_: coma . EXP
+  122 M_EXP_: menos @39 M_EXP .
 
-    l_paren    shift, and go to state 101
-    cte_int    shift, and go to state 102
-    cte_float  shift, and go to state 103
-    cte_char   shift, and go to state 104
-    id_        shift, and go to state 105
-
-    LLAMADA_RET  go to state 106
-    EXP          go to state 231
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+    $default  reduce using rule 122 (M_EXP_)
 
 
 state 222
 
-   62 ASIG: l_bracket @16 EXP @17 ASIG_ . r_bracket
+  129 T_: divi @42 T .
 
-    r_bracket  shift, and go to state 232
+    $default  reduce using rule 129 (T_)
 
 
 state 223
 
-   58 ASIGNACION: id_ @13 ASIG asignador @14 EXP @15 . punto_coma
+  127 T_: mult @41 T .
 
-    punto_coma  shift, and go to state 233
+    $default  reduce using rule 127 (T_)
 
 
 state 224
 
-   69 LLAMADA_VOID: id_ @18 FUNC_ l_paren @19 FUNC_PARAM r_paren . @20 punto_coma
+   84 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer . l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 68 (@20)
-
-    @20  go to state 234
+    l_brace  shift, and go to state 236
 
 
 state 225
 
-   76 FUNC_PARAM: EXP @23 . FUNC_PARAM_
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP . @29 hacer @30 l_brace ESTATUTOS r_brace
 
-    coma  shift, and go to state 235
+    $default  reduce using rule 86 (@29)
 
-    $default  reduce using rule 79 (FUNC_PARAM_)
-
-    FUNC_PARAM_  go to state 236
+    @29  go to state 237
 
 
 state 226
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS . r_brace
-
-    r_brace  shift, and go to state 237
-
-
-state 227
-
-   72 LLAMADA_RET: id_ @21 FUNC_ l_paren @22 FUNC_PARAM . r_paren
-
-    r_paren  shift, and go to state 238
-
-
-state 228
-
-   81 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS . r_brace DECISION_
-
-    r_brace  shift, and go to state 239
-
-
-state 229
-
-   87 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace . ESTATUTOS r_brace
-
-    si        shift, and go to state 62
-    mientras  shift, and go to state 63
-    desde     shift, and go to state 64
-    lee       shift, and go to state 65
-    escribe   shift, and go to state 66
-    regresa   shift, and go to state 67
-    id_       shift, and go to state 68
-
-    $default  reduce using rule 144 (ESTATUTOS)
-
-    ASIGNACION     go to state 69
-    LLAMADA_VOID   go to state 70
-    DECISION       go to state 71
-    CONDICIONAL    go to state 72
-    NOCONDICIONAL  go to state 73
-    ESCRITURA      go to state 74
-    LECTURA        go to state 75
-    RETORNO        go to state 76
-    ESTATUTOS      go to state 240
-    ESTATUTO       go to state 78
-
-
-state 230
-
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 . hacer @30 l_brace ESTATUTOS r_brace
-
-    hacer  shift, and go to state 241
-
-
-state 231
-
-   64 ASIG_: coma EXP .
-
-    $default  reduce using rule 64 (ASIG_)
-
-
-state 232
-
-   62 ASIG: l_bracket @16 EXP @17 ASIG_ r_bracket .
-
-    $default  reduce using rule 62 (ASIG)
-
-
-state 233
-
-   58 ASIGNACION: id_ @13 ASIG asignador @14 EXP @15 punto_coma .
-
-    $default  reduce using rule 58 (ASIGNACION)
-
-
-state 234
-
-   69 LLAMADA_VOID: id_ @18 FUNC_ l_paren @19 FUNC_PARAM r_paren @20 . punto_coma
-
-    punto_coma  shift, and go to state 242
-
-
-state 235
-
-   78 FUNC_PARAM_: coma . FUNC_PARAM
+   66 ASIG_: coma . EXP
 
     l_paren    shift, and go to state 101
     cte_int    shift, and go to state 102
@@ -2819,194 +2765,361 @@ state 235
     cte_char   shift, and go to state 104
     id_        shift, and go to state 105
 
-    $default  reduce using rule 77 (FUNC_PARAM)
+    EXP    go to state 238
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
-    LLAMADA_RET  go to state 106
-    FUNC_PARAM   go to state 243
-    EXP          go to state 208
-    EXP_Q        go to state 108
-    T_EXP        go to state 109
-    G_EXP        go to state 110
-    M_EXP        go to state 111
-    T            go to state 112
-    F            go to state 113
-    CTE          go to state 114
+
+state 227
+
+   64 ASIG: l_bracket @18 EXP @19 ASIG_ . r_bracket
+
+    r_bracket  shift, and go to state 239
+
+
+state 228
+
+   60 ASIGNACION: id_ @15 ASIG asignador @16 EXP @17 . punto_coma
+
+    punto_coma  shift, and go to state 240
+
+
+state 229
+
+   71 LLAMADA_VOID: id_ @20 l_paren @21 FUNC_PARAM r_paren @22 . punto_coma
+
+    punto_coma  shift, and go to state 241
+
+
+state 230
+
+   75 FUNC_PARAM_: coma . FUNC_PARAM
+
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
+
+    $default  reduce using rule 74 (FUNC_PARAM)
+
+    FUNC_PARAM  go to state 242
+    EXP         go to state 188
+    EXP_Q       go to state 107
+    T_EXP       go to state 108
+    G_EXP       go to state 109
+    M_EXP       go to state 110
+    T           go to state 111
+    F           go to state 112
+    CTE         go to state 113
+
+
+state 231
+
+   73 FUNC_PARAM: EXP @23 FUNC_PARAM_ .
+
+    $default  reduce using rule 73 (FUNC_PARAM)
+
+
+state 232
+
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS . r_brace
+
+    r_brace  shift, and go to state 243
+
+
+state 233
+
+  139 ID_A: l_bracket @45 EXP @46 . ID_ARR r_bracket
+
+    coma  shift, and go to state 244
+
+    $default  reduce using rule 142 (ID_ARR)
+
+    ID_ARR  go to state 245
+
+
+state 234
+
+  146 LLAMADA_RET: l_paren @47 FUNC_PARAM . r_paren
+
+    r_paren  shift, and go to state 246
+
+
+state 235
+
+   78 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS . r_brace DECISION_
+
+    r_brace  shift, and go to state 247
 
 
 state 236
 
-   76 FUNC_PARAM: EXP @23 FUNC_PARAM_ .
+   84 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace . ESTATUTOS r_brace
 
-    $default  reduce using rule 76 (FUNC_PARAM)
+    si        shift, and go to state 60
+    mientras  shift, and go to state 61
+    desde     shift, and go to state 62
+    lee       shift, and go to state 63
+    escribe   shift, and go to state 64
+    regresa   shift, and go to state 65
+    id_       shift, and go to state 66
+
+    $default  reduce using rule 152 (ESTATUTOS)
+
+    ASIGNACION     go to state 67
+    LLAMADA_VOID   go to state 68
+    DECISION       go to state 69
+    CONDICIONAL    go to state 70
+    NOCONDICIONAL  go to state 71
+    ESCRITURA      go to state 72
+    LECTURA        go to state 73
+    RETORNO        go to state 74
+    ESTATUTOS      go to state 248
+    ESTATUTO       go to state 76
 
 
 state 237
 
-   45 FUNCION: funcion TIPO_RET id_ @8 l_paren @9 PARAMETROS @10 r_paren punto_coma FUNC_VARIABLES @11 l_brace ESTATUTOS r_brace .
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 . hacer @30 l_brace ESTATUTOS r_brace
 
-    $default  reduce using rule 45 (FUNCION)
+    hacer  shift, and go to state 249
 
 
 state 238
 
-   72 LLAMADA_RET: id_ @21 FUNC_ l_paren @22 FUNC_PARAM r_paren .
+   66 ASIG_: coma EXP .
 
-    $default  reduce using rule 72 (LLAMADA_RET)
+    $default  reduce using rule 66 (ASIG_)
 
 
 state 239
 
-   81 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace . DECISION_
+   64 ASIG: l_bracket @18 EXP @19 ASIG_ r_bracket .
 
-    sino  shift, and go to state 244
-
-    $default  reduce using rule 84 (DECISION_)
-
-    DECISION_  go to state 245
+    $default  reduce using rule 64 (ASIG)
 
 
 state 240
 
-   87 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS . r_brace
+   60 ASIGNACION: id_ @15 ASIG asignador @16 EXP @17 punto_coma .
 
-    r_brace  shift, and go to state 246
+    $default  reduce using rule 60 (ASIGNACION)
 
 
 state 241
 
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer . @30 l_brace ESTATUTOS r_brace
+   71 LLAMADA_VOID: id_ @20 l_paren @21 FUNC_PARAM r_paren @22 punto_coma .
 
-    $default  reduce using rule 90 (@30)
-
-    @30  go to state 247
+    $default  reduce using rule 71 (LLAMADA_VOID)
 
 
 state 242
 
-   69 LLAMADA_VOID: id_ @18 FUNC_ l_paren @19 FUNC_PARAM r_paren @20 punto_coma .
+   75 FUNC_PARAM_: coma FUNC_PARAM .
 
-    $default  reduce using rule 69 (LLAMADA_VOID)
+    $default  reduce using rule 75 (FUNC_PARAM_)
 
 
 state 243
 
-   78 FUNC_PARAM_: coma FUNC_PARAM .
+   47 FUNCION: funcion TIPO_RET id_ @10 l_paren @11 PARAMETROS @12 r_paren punto_coma FUNC_VARIABLES @13 l_brace ESTATUTOS r_brace .
 
-    $default  reduce using rule 78 (FUNC_PARAM_)
+    $default  reduce using rule 47 (FUNCION)
 
 
 state 244
 
-   83 DECISION_: sino . @25 l_brace ESTATUTOS r_brace
+  141 ID_ARR: coma . EXP
 
-    $default  reduce using rule 82 (@25)
+    l_paren    shift, and go to state 101
+    cte_int    shift, and go to state 102
+    cte_float  shift, and go to state 103
+    cte_char   shift, and go to state 104
+    id_        shift, and go to state 105
 
-    @25  go to state 248
+    EXP    go to state 250
+    EXP_Q  go to state 107
+    T_EXP  go to state 108
+    G_EXP  go to state 109
+    M_EXP  go to state 110
+    T      go to state 111
+    F      go to state 112
+    CTE    go to state 113
 
 
 state 245
 
-   81 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_ .
+  139 ID_A: l_bracket @45 EXP @46 ID_ARR . r_bracket
 
-    $default  reduce using rule 81 (DECISION)
+    r_bracket  shift, and go to state 251
 
 
 state 246
 
-   87 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace .
+  146 LLAMADA_RET: l_paren @47 FUNC_PARAM r_paren .
 
-    $default  reduce using rule 87 (CONDICIONAL)
+    $default  reduce using rule 146 (LLAMADA_RET)
 
 
 state 247
 
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 . l_brace ESTATUTOS r_brace
+   78 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace . DECISION_
 
-    l_brace  shift, and go to state 249
+    sino  shift, and go to state 252
+
+    $default  reduce using rule 81 (DECISION_)
+
+    DECISION_  go to state 253
 
 
 state 248
 
-   83 DECISION_: sino @25 . l_brace ESTATUTOS r_brace
-
-    l_brace  shift, and go to state 250
-
-
-state 249
-
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace . ESTATUTOS r_brace
-
-    si        shift, and go to state 62
-    mientras  shift, and go to state 63
-    desde     shift, and go to state 64
-    lee       shift, and go to state 65
-    escribe   shift, and go to state 66
-    regresa   shift, and go to state 67
-    id_       shift, and go to state 68
-
-    $default  reduce using rule 144 (ESTATUTOS)
-
-    ASIGNACION     go to state 69
-    LLAMADA_VOID   go to state 70
-    DECISION       go to state 71
-    CONDICIONAL    go to state 72
-    NOCONDICIONAL  go to state 73
-    ESCRITURA      go to state 74
-    LECTURA        go to state 75
-    RETORNO        go to state 76
-    ESTATUTOS      go to state 251
-    ESTATUTO       go to state 78
-
-
-state 250
-
-   83 DECISION_: sino @25 l_brace . ESTATUTOS r_brace
-
-    si        shift, and go to state 62
-    mientras  shift, and go to state 63
-    desde     shift, and go to state 64
-    lee       shift, and go to state 65
-    escribe   shift, and go to state 66
-    regresa   shift, and go to state 67
-    id_       shift, and go to state 68
-
-    $default  reduce using rule 144 (ESTATUTOS)
-
-    ASIGNACION     go to state 69
-    LLAMADA_VOID   go to state 70
-    DECISION       go to state 71
-    CONDICIONAL    go to state 72
-    NOCONDICIONAL  go to state 73
-    ESCRITURA      go to state 74
-    LECTURA        go to state 75
-    RETORNO        go to state 76
-    ESTATUTOS      go to state 252
-    ESTATUTO       go to state 78
-
-
-state 251
-
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS . r_brace
-
-    r_brace  shift, and go to state 253
-
-
-state 252
-
-   83 DECISION_: sino @25 l_brace ESTATUTOS . r_brace
+   84 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS . r_brace
 
     r_brace  shift, and go to state 254
 
 
+state 249
+
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer . @30 l_brace ESTATUTOS r_brace
+
+    $default  reduce using rule 87 (@30)
+
+    @30  go to state 255
+
+
+state 250
+
+  141 ID_ARR: coma EXP .
+
+    $default  reduce using rule 141 (ID_ARR)
+
+
+state 251
+
+  139 ID_A: l_bracket @45 EXP @46 ID_ARR r_bracket .
+
+    $default  reduce using rule 139 (ID_A)
+
+
+state 252
+
+   80 DECISION_: sino . @25 l_brace ESTATUTOS r_brace
+
+    $default  reduce using rule 79 (@25)
+
+    @25  go to state 256
+
+
 state 253
 
-   91 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace .
+   78 DECISION: si l_paren EXP r_paren @24 entonces l_brace ESTATUTOS r_brace DECISION_ .
 
-    $default  reduce using rule 91 (NOCONDICIONAL)
+    $default  reduce using rule 78 (DECISION)
 
 
 state 254
 
-   83 DECISION_: sino @25 l_brace ESTATUTOS r_brace .
+   84 CONDICIONAL: mientras @26 l_paren EXP r_paren @27 hacer l_brace ESTATUTOS r_brace .
 
-    $default  reduce using rule 83 (DECISION_)
+    $default  reduce using rule 84 (CONDICIONAL)
+
+
+state 255
+
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 . l_brace ESTATUTOS r_brace
+
+    l_brace  shift, and go to state 257
+
+
+state 256
+
+   80 DECISION_: sino @25 . l_brace ESTATUTOS r_brace
+
+    l_brace  shift, and go to state 258
+
+
+state 257
+
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace . ESTATUTOS r_brace
+
+    si        shift, and go to state 60
+    mientras  shift, and go to state 61
+    desde     shift, and go to state 62
+    lee       shift, and go to state 63
+    escribe   shift, and go to state 64
+    regresa   shift, and go to state 65
+    id_       shift, and go to state 66
+
+    $default  reduce using rule 152 (ESTATUTOS)
+
+    ASIGNACION     go to state 67
+    LLAMADA_VOID   go to state 68
+    DECISION       go to state 69
+    CONDICIONAL    go to state 70
+    NOCONDICIONAL  go to state 71
+    ESCRITURA      go to state 72
+    LECTURA        go to state 73
+    RETORNO        go to state 74
+    ESTATUTOS      go to state 259
+    ESTATUTO       go to state 76
+
+
+state 258
+
+   80 DECISION_: sino @25 l_brace . ESTATUTOS r_brace
+
+    si        shift, and go to state 60
+    mientras  shift, and go to state 61
+    desde     shift, and go to state 62
+    lee       shift, and go to state 63
+    escribe   shift, and go to state 64
+    regresa   shift, and go to state 65
+    id_       shift, and go to state 66
+
+    $default  reduce using rule 152 (ESTATUTOS)
+
+    ASIGNACION     go to state 67
+    LLAMADA_VOID   go to state 68
+    DECISION       go to state 69
+    CONDICIONAL    go to state 70
+    NOCONDICIONAL  go to state 71
+    ESCRITURA      go to state 72
+    LECTURA        go to state 73
+    RETORNO        go to state 74
+    ESTATUTOS      go to state 260
+    ESTATUTO       go to state 76
+
+
+state 259
+
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS . r_brace
+
+    r_brace  shift, and go to state 261
+
+
+state 260
+
+   80 DECISION_: sino @25 l_brace ESTATUTOS . r_brace
+
+    r_brace  shift, and go to state 262
+
+
+state 261
+
+   88 NOCONDICIONAL: desde id_ asignador EXP @28 hasta EXP @29 hacer @30 l_brace ESTATUTOS r_brace .
+
+    $default  reduce using rule 88 (NOCONDICIONAL)
+
+
+state 262
+
+   80 DECISION_: sino @25 l_brace ESTATUTOS r_brace .
+
+    $default  reduce using rule 80 (DECISION_)
