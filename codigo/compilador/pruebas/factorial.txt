@@ -3,12 +3,13 @@ variables
     int : x, i, res;
 
 principal() {
-	escribe("Numero factorial a calcular:" );
+	escribe("Numero factorial a calcular:");
 	lee(x);
 	res = 1;
 
-	desde i = 2 hasta i <= x hacer
+	desde i = 2 hasta i <= x hacer{
 		res = res * i;
+	}
 	
-	escribe(res);
+	escribe("Solución: ", res);
 }

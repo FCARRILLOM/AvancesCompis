@@ -1,0 +1,18 @@
+programa fibonacci;
+variables
+    int : x, res;
+
+funcion int factorial(int : n);
+{
+	si (x == 0) entonces {
+        regresa 1;
+	}
+    regresa n * factorial(n - 1);
+}
+
+principal() {
+	escribe("Numero factorial a calcular:");
+	lee(x);
+	res = factorial(x);
+	escribe("Solución: ", res);
+}
