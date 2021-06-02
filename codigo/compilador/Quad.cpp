@@ -456,12 +456,9 @@ void Quad::addArrayQuads() {
         // verify s1
         std::vector<std::string> tempQuad {"VER", resultadosDimensiones[0], "0", std::to_string(arrNodes[0].size - 1)};
         addQuad(tempQuad);
-        // s1 + base
-        std::string dirBase = std::to_string(currentVar.memoryAddr);
-        std::string result = getNextAvail("int");
-        tempQuad = std::vector<std::string>({"+", resultadosDimensiones[0], dirBase, result});
-        addQuad(tempQuad);
-        sOperands.push_back(result);
+
+        // s1
+        sOperands.push_back(resultadosDimensiones[0]);
         sTypes.push_back("int");
 
     } else if (numNodes == 2){
@@ -496,18 +493,12 @@ void Quad::addArrayQuads() {
         return;
     }
 
-    // (s1*m1 + s2 or s1) + base
+    // s1 o (s1*m1 + s2 or s1) + base
     std::string dirBase = std::to_string(currentVar.memoryAddr);
-    if ((*tablasDatos).constDir.count(dirBase) <= 0) { // reserva valor constante en tabla de ctes.
-        int memAddr = memoria->reserveIntMemory("const", false, 1);
-        if (memAddr == -1)
-            std::cout << "ERROR: cannot reserve memory for const " +  dirBase + " \n";
-
-        (*tablasDatos).constDir[dirBase] = memAddr;
-    }
+    reserveConstValue(dirBase);
     std::string result = getNextAvail("int");
 
-    // (s1*m1 + s2 or s1)
+    // s1 o (s1*m1 + s2 or s1)
     std::string address = sOperands.back();
     sOperands.pop_back();
     std::string type = sTypes.back();
@@ -703,7 +694,7 @@ void Quad::addLoopLimit() {
 
         std::string result = getNextAvail("bool");
         // memory: temp, bool, 
-        std::vector<std::string> tempQuad {"<=", counterId, limitExp, result}; 
+        std::vector<std::string> tempQuad {"<", counterId, limitExp, result}; 
         addQuad(tempQuad);
 
         sOperands.push_back(result);
@@ -870,6 +861,16 @@ std::vector<int> Quad::getCurrentTempTypes() {
     sTempTypes.pop_back();
 
     return tempTypes;
+}
+
+void Quad::reserveConstValue(std::string value) {
+    if ((*tablasDatos).constDir.count(value) <= 0) { // reserva valor constante en tabla de ctes.
+        int memAddr = memoria->reserveIntMemory("const", false, 1);
+        if (memAddr == -1)
+            std::cout << "ERROR: cannot reserve memory for const " +  value + " \n";
+
+        (*tablasDatos).constDir[value] = memAddr;
+    }
 }
 
 void Quad::printData() {

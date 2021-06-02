@@ -15,7 +15,7 @@ funcion int fibR(int : x);
 funcion void imprimeSequenciaFib(int : n);
 {
 	escribe(0);
-	desde a = 1 hasta (n - 1) hacer {
+	desde a = 1 hasta n hacer {
 		escribe(fibR(a));
 	}
 }

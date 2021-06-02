@@ -246,6 +246,8 @@ public:
     // Regresa el conteo de las temporales utilizadas en el contexto más reciente.
     std::vector<int> getCurrentTempTypes();
 
+    void reserveConstValue(std::string value);
+
 };
 
 #endif

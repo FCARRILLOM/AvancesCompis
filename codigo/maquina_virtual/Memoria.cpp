@@ -203,7 +203,10 @@ int Memoria::getIntValue(const std::string address) {
     }
 
     if (loc >= globalInt && loc < globalFloat) { // global
-        if (loc - globalInt >= globalIntMemory.size()) {std::cout << "ERROR accesing global int memory\n"; return -1; }
+        std::cout << "GLOBAL INT\n";
+        std::cout << loc << " - " << globalInt << "\n";
+        std::cout << globalIntMemory.size() << "\n";
+        if (loc - globalInt > globalIntMemory.size()) {std::cout << "ERROR accesing global int memory\n"; return -1; }
         return globalIntMemory[loc - globalInt];
 
     } else if (loc >= globalTempInt && loc < globalTempFloat) { // global temp

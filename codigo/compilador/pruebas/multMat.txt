@@ -37,7 +37,7 @@ funcion void matrixMult();
 }
 
 principal() {
-    tam = 2;
+    tam = 3;
     %%dotProduct();
     matrixMult();
 
@@ -47,7 +47,5 @@ principal() {
         }
         escribe("------");
     }
-    
-    
-	escribe("FIN");
+        
 }
