@@ -3,7 +3,7 @@ variables
     int : x, i;
 
 principal() {
-	escribe("Cantidad de elementos de la seria fibonacci:" );
+	escribe("Cantidad de elementos de la serie fibonacci:" );
 	lee(x);
 
 	int : f[x];
