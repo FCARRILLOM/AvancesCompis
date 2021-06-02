@@ -12,7 +12,15 @@ Clase carro;
         {
             x = 2;
             y = 3;
-            regresa(x + y);
+            regresa(x * y);
+        }
+
+        funcion void llantas();
+        variables
+            int : x, y;
+        {
+            x = 4;
+            escribe("llantas", x);
         }
 };
 
@@ -29,5 +37,6 @@ variables
 
 principal() {
 	f1();
-    escribe(audi.velocidadMaxima());
+    escribe(audi->velocidadMaxima());
+    audi->llantas();
 }

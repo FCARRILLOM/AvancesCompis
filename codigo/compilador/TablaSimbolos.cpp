@@ -5,7 +5,7 @@
 void TablaSimbolos::addVarsToDir(std::string funcId, std::vector<VarEntry> vars) {
    // mapea todas las variables dentro del directorio de variables
    if ((*funcDir)[funcId].varDir == nullptr) {
-      std::cout << "ERROR: Empty variable directory for function: " << funcId << "\n";
+      std::cout << "ERROR: Directorio de variables vacío para la función: " << funcId << "\n";
       return;
    }
 
@@ -71,7 +71,7 @@ void TablaSimbolos::addVarsToDir(std::string funcId, std::vector<VarEntry> vars)
       }
 
       if (memAddr == -1 && type != 4) {
-         std::cout << "ERROR: cannot reserve space for variable " + var.varName + "\n";
+         std::cout << "ERROR: No se puede reservar espacio para la variable " + var.varName + "\n";
       }
 
      var.memoryAddr = memAddr;
@@ -93,7 +93,7 @@ void TablaSimbolos::saveCurrentVarType(const std::string varType) {
 void TablaSimbolos::addVarToList(const std::string varName) {
    for (VarEntry var : varsForDir) {
       if (var.varName == varName) {
-         std::cout << "ERROR: redeclaration of variable named '" + varName + "'\n";
+         std::cout << "ERROR: Redeclaración de la variable nombrada '" + varName + "'\n";
          return;
       }
    }
@@ -103,7 +103,7 @@ void TablaSimbolos::addVarToList(const std::string varName) {
       std::unordered_map<std::string, VarEntry>& globalVars = *(*funcDir)[programName].varDir;
       for (auto var : globalVars) {
          if (var.first == varName) {
-            std::cout << "ERROR: redeclaration of global variable named '" + varName + "'\n";
+            std::cout << "ERROR: Redeclaración de la variable global nombrada '" + varName + "'\n";
             return;
          }
       }
@@ -111,7 +111,7 @@ void TablaSimbolos::addVarToList(const std::string varName) {
 
    for (VarEntry par : parameters) {
       if (par.varName == varName) {
-         std::cout << "ERROR: redeclaration of function parameter named '" + varName + "'\n";
+         std::cout << "ERROR: Redeclaración del parámetro de la función nombrada '" + varName + "'\n";
          return;
       }
    }
@@ -167,7 +167,7 @@ void TablaSimbolos::addParameterVar(std::string varName, std::string varType) {
    // check existing variable name in parameter
    for (VarEntry par : parameters) {
       if (par.varName == varName) {
-         std::cout << "ERROR: redeclaration of parameter named '" + varName + "'\n";
+         std::cout << "ERROR: Redeclaración del parámetro nombrado '" + varName + "'\n";
          return;
       }
    }
@@ -183,7 +183,7 @@ int TablaSimbolos::funcExists(const std::string funcId) {
 // 1
 void TablaSimbolos::createFunc(std::string funcId, const std::string returnType) {   
    if (currentClassDecl != "main") {
-      funcId = currentClassDecl + "." + funcId;
+      funcId = currentClassDecl + "->" + funcId;
    }
 
    if (funcExists(funcId)) { 
@@ -235,9 +235,9 @@ void TablaSimbolos::verifyFunction() {
    std::string funcId = quad->popOperand();
    std::string functionType = quad->popType();
 
-   if (funcId.find(".") != std::string::npos) {
+   if (funcId.find("->") != std::string::npos) {
          // sustituir nombre de variable por nombre de clase ej. bmw.a() -> carro.a()
-         std::size_t start = 0U, punto = funcId.find(".");
+         std::size_t start = 0U, punto = funcId.find("->");
          std::string classVariable = funcId.substr(start, punto - start);
 
          std::string className = "default";
@@ -248,8 +248,8 @@ void TablaSimbolos::verifyFunction() {
             }
          }
 
-         funcId.erase(start, punto+1);
-         funcId = className + "." + funcId;
+         funcId.erase(start, punto+2);
+         funcId = className + "->" + funcId;
     }
 
    if ((*funcDir).count(funcId) == 0) {
@@ -258,7 +258,27 @@ void TablaSimbolos::verifyFunction() {
    functionCalls.push_back(funcId);
 }
 
-void TablaSimbolos::verifyVoidFunction(const std::string funcId) {
+void TablaSimbolos::verifyVoidFunction() {
+   std::string funcId = quad->popOperand();
+   std::string functionType = quad->popType();
+
+   if (funcId.find("->") != std::string::npos) {
+         // sustituir nombre de variable por nombre de clase ej. bmw.a() -> carro.a()
+         std::size_t start = 0U, punto = funcId.find("->");
+         std::string classVariable = funcId.substr(start, punto - start);
+
+         std::string className = "default_void";
+         std::unordered_map<std::string, VarEntry>& globalVars = *(*funcDir)[programName].varDir;
+         for (auto var : globalVars) {
+            if (var.first == classVariable) {
+               className = var.second.varType;
+            }
+         }
+
+         funcId.erase(start, punto+2);
+         funcId = className + "->" + funcId;
+    }
+
    if ((*funcDir).count(funcId) == 0) {
       std::cout << "ERROR: " + funcId + " no existe\n";
    }
@@ -281,15 +301,15 @@ void TablaSimbolos::verifyParameterType() {
 
    if (currentParameterCount < (*funcDir)[currentFunc].parameterTable.size()) {
       if (argumentType != (*funcDir)[currentFunc].parameterTable[currentParameterCount]) {
-         std::cout << "ERROR: mismatching parameter types for func '" + currentFunc + "'\n";
-         std::cout << "Given type: " + argumentType + ", expected type: " + (*funcDir)[currentFunc].parameterTable[currentParameterCount] + "\n";
+         std::cout << "ERROR: Tipos de parámetros no coincidentes para la función '" + currentFunc + "'\n";
+         std::cout << "Tipo dado: " + argumentType + ", tipo esperado: " + (*funcDir)[currentFunc].parameterTable[currentParameterCount] + "\n";
          return;
       }
 
       quad->generateParameter(argument, "param" + std::to_string(currentParameterCount));
 
    } else {
-      std::cout << "ERROR: extraneous parameters for func '" + currentFunc + "'\n";
+      std::cout << "ERROR: Parámetros extraños para la función '" + currentFunc + "'\n";
    }
 }
 
@@ -301,7 +321,7 @@ void TablaSimbolos::moveToNextParam(){
 // 5
 void TablaSimbolos::verifyLastParam(){
    if (parameterCounter.back() != (*funcDir)[functionCalls.back()].parameterTable.size()) {
-      std::cout << "ERROR: coherence in number of parameters for function call '" + functionCalls.back() + "'\n";
+      std::cout << "ERROR: Coherencia en el número de parámetros para la llamada de función '" + functionCalls.back() + "'\n";
    }
    parameterCounter.pop_back();
 }
@@ -333,7 +353,7 @@ void TablaSimbolos::addVarsToClass() {
 
    for (VarEntry var : varsForDir) {
       if (classEntry.varTable.count(var.varName) > 0) {
-         std::cout << "ERROR: attributo " + var.varName + " duplicado\n";
+         std::cout << "ERROR: Attributo " + var.varName + " duplicado\n";
          return;
       }
 
@@ -367,12 +387,14 @@ void TablaSimbolos::saveGlobalVars() {
 // 5
 void TablaSimbolos::addFuncGlobalVar() {
    if ((*funcDir)[currentFuncDecl].returnType == "void") {
+      VarEntry var { currentFuncDecl, "void", -1, {}};
+      (*(*funcDir)[programName].varDir)[var.varName] = var;
       return;
    }
 
    // mapea todas las variables dentro del directorio de variables
    if ((*funcDir)[programName].varDir == nullptr) {
-      std::cout << "ERROR: Empty variable directory for function: " << programName << "\n";
+      std::cout << "ERROR: Directorio de variables vacío para la función: " << programName << "\n";
       return;
    }
 
@@ -391,7 +413,7 @@ void TablaSimbolos::addFuncGlobalVar() {
    }
 
    if (memAddr == -1) {
-      std::cout << "ERROR: cannot reserve space for function var\n";
+      std::cout << "ERROR: No se puede reservar espacio para la función var\n";
       return;
    }
 
@@ -416,7 +438,7 @@ void TablaSimbolos::saveReturnValue() {
 
    if (result.substr(0, 3) != "err") {
       if (resultType != (*funcDir)[currentFuncDecl].returnType) {
-         std::cout << "ERROR: function return type not valid for function '" + currentFuncDecl + "'\n";
+         std::cout << "ERROR: el tipo de retorno de la función no es válido para la función '" + currentFuncDecl + "'\n";
       } else {
          quad->saveReturnValue(result);
       }

@@ -50,7 +50,7 @@ void Memoria::generateERAConst(const std::map<std::string, std::string> &constTa
             constFloatMemory.push_back(stof(entry.second));
         } else if (loc >= constChar) {
             c++;
-            constCharMemory.push_back(entry.second[0]);
+            constCharMemory.push_back(entry.second[1]);
         }
     }
 }
@@ -203,32 +203,29 @@ int Memoria::getIntValue(const std::string address) {
     }
 
     if (loc >= globalInt && loc < globalFloat) { // global
-        std::cout << "GLOBAL INT\n";
-        std::cout << loc << " - " << globalInt << "\n";
-        std::cout << globalIntMemory.size() << "\n";
-        if (loc - globalInt > globalIntMemory.size()) {std::cout << "ERROR accesing global int memory\n"; return -1; }
+        if (loc - globalInt > globalIntMemory.size()) {std::cout << "ERROR: Al acceder a la memoria int global\n"; return -1; }
         return globalIntMemory[loc - globalInt];
 
     } else if (loc >= globalTempInt && loc < globalTempFloat) { // global temp
-        if (loc - globalTempInt >= globalTempIntMemory.size()) { std::cout << "ERROR accesing global temp int memory\n"; return -1; }
+        if (loc - globalTempInt > globalTempIntMemory.size()) { std::cout << "ERROR: Al acceder a la memoria temporal int global\n"; return -1; }
         return globalTempIntMemory[loc - globalTempInt];
 
     } else if (loc >= localInt && loc < localFloat) { // local
         int currentOffset = sOffsets[0][sContextos.back()];
 
-        if (loc - localInt >= localIntMemory.size() - currentOffset) {std::cout << "ERROR accesing local int memory\n"; return -1; }
+        if (loc - localInt >= localIntMemory.size() - currentOffset) {std::cout << "ERROR: Al acceder a la memoria int local\n"; return -1; }
         int relativePos = loc - localInt + currentOffset;
         return localIntMemory[relativePos];
 
     } else if (loc >= localTempInt && loc < localTempFloat) { // local temp
         int currentOffset = sOffsets[3][sContextos.back()];
 
-        if (loc - localTempInt >= localTempIntMemory.size() - currentOffset) {std::cout << "ERROR accesing local temp int memory\n"; return -1; }
+        if (loc - localTempInt > localTempIntMemory.size() - currentOffset) {std::cout << "ERROR: Al acceder a la memoria temporal int local\n"; return -1; }
         int relativePos = loc - localTempInt + currentOffset;
         return localTempIntMemory[relativePos];
 
     } else if (loc >= constInt && loc < constFloat) { // const
-        if (loc - constInt >= constIntMemory.size()) {std::cout << "ERROR accesing const int memory\n"; return -1; }
+        if (loc - constInt >= constIntMemory.size()) {std::cout << "ERROR: Al acceder a la memoria de constantes int local\n"; return -1; }
         return constIntMemory[loc - constInt];
     }
 
@@ -239,33 +236,29 @@ float Memoria::getFloatValue(const std::string address) {
     int loc = stoi(address);
 
     if (loc >= globalFloat && loc < globalChar) { // global
-        if (loc - globalFloat >= globalFloatMemory.size()) {std::cout << "ERROR accesing global Float memory\n"; return -1; }
+        if (loc - globalFloat >= globalFloatMemory.size()) {std::cout << "ERROR: Al acceder a la memoria global Float\n"; return -1; }
         return globalFloatMemory[loc - globalFloat];
 
     } else if (loc >= globalTempFloat && loc < globalTempBool) { // global temp
-        if (loc - globalTempFloat >= globalTempFloatMemory.size()) { std::cout << "ERROR accesing global temp Float memory\n"; return -1; }
+        if (loc - globalTempFloat > globalTempFloatMemory.size()) { std::cout << "ERROR: Al acceder a la memoria global temp Float\n"; return -1; }
         return globalTempFloatMemory[loc - globalTempFloat];
 
     } else if (loc >= localFloat && loc < localChar) { // local
         int currentOffset = sOffsets[1][sContextos.back()];
 
-        if (loc - localFloat >= localFloatMemory.size() - currentOffset) {std::cout << "ERROR accesing local Float memory\n"; return -1; }
+        if (loc - localFloat >= localFloatMemory.size() - currentOffset) {std::cout << "ERROR: Al acceder a la memoria local Float\n"; return -1; }
         int relativePos = loc - localFloat + currentOffset;
         return localFloatMemory[relativePos];
 
     } else if (loc >= localTempFloat && loc < localTempBool) { // local temp
-        // TODO: BUG cuando corro  params.txt?
         int currentOffset = sOffsets[4][sContextos.back()];
-        std::cout << "LOCAL TEMP\n";
-        std::cout << loc << " - " << localTempFloat << "\n";
-        std::cout << localTempFloatMemory.size() << " - "  << currentOffset << "\n";
 
-        if (loc - localTempFloat >= localTempFloatMemory.size() - currentOffset) {std::cout << "ERROR accesing local temp Float memory\n"; return -1; }
+        if (loc - localTempFloat > localTempFloatMemory.size() - currentOffset) {std::cout << "ERROR: Al acceder a la memoria local temp Float\n"; return -1; }
         int relativePos = loc - localTempFloat + currentOffset;
         return localTempFloatMemory[relativePos];
 
     } else if (loc >= constFloat && loc < constChar) { // const
-        if (loc - constFloat >= constFloatMemory.size()) {std::cout << "ERROR accesing const Float memory\n"; return -1; }
+        if (loc - constFloat >= constFloatMemory.size()) {std::cout << "ERROR: Al acceder a la memoria const Float\n"; return -1; }
         return constFloatMemory[loc - constFloat];
     }
 
@@ -273,20 +266,46 @@ float Memoria::getFloatValue(const std::string address) {
 }
 
 char Memoria::getCharValue(const std::string address) {
-    return 'a';
+    int loc;
+    if (address[0] == '(') {
+        // todos los pointers guardan datos tipo int
+        std::string strippedAddress = stripPointerAddress(address);
+        int finalAddress = getCharValue(strippedAddress);
+        loc = finalAddress;
+    } else {
+        loc = stoi(address);
+    }
+
+    if (loc >= globalChar && loc < globalTempInt) { // global
+        if (loc - globalChar > globalCharMemory.size()) {std::cout << "ERROR: Al acceder a la memoria char global\n"; return -1; }
+        return globalCharMemory[loc - globalChar];
+    
+    } else if (loc >= localChar && loc < localTempFloat) { // local
+        int currentOffset = sOffsets[2][sContextos.back()];
+
+        if (loc - localChar >= localCharMemory.size() - currentOffset) {std::cout << "ERROR: Al acceder a la memoria char local\n"; return -1; }
+        int relativePos = loc - localChar + currentOffset;
+        return localCharMemory[relativePos];
+
+    } else if (loc >= constChar && loc < constStart+constSize) { // const
+        if (loc - constChar >= constCharMemory.size()) {std::cout << "ERROR: Al acceder a la memoria de constantes char\n"; return -1; }
+        return constCharMemory[loc - constChar];
+    }
+
+    return 'Z';
 }
 
 bool Memoria::getBoolValue(const std::string address) {
     int loc = stoi(address);
 
     if (loc >= globalTempBool && loc < localInt) { // global temp
-        if (loc - globalTempBool >= globalTempBoolMemory.size()) { std::cout << "ERROR accesing global temp Bool memory\n"; return -1; }
+        if (loc - globalTempBool >= globalTempBoolMemory.size()) { std::cout << "ERROR: Al acceder a la memoria global temp Bool\n"; return -1; }
         return globalTempBoolMemory[loc - globalTempBool];
 
     } else if (loc >= localTempBool && loc < constInt) { // local temp
         int currentOffset = sOffsets[5][sContextos.back()];
 
-        if (loc - localTempBool >= localTempBoolMemory.size() - currentOffset) {std::cout << "ERROR accesing local temp Bool memory\n"; return -1; }
+        if (loc - localTempBool >= localTempBoolMemory.size() - currentOffset) {std::cout << "ERROR: Al acceder a la memoria local temp Bool\n"; return -1; }
         int relativePos = loc - localTempBool + currentOffset;
         return localTempBoolMemory[relativePos];
     }
@@ -305,29 +324,29 @@ void Memoria::saveIntValue(int value, const std::string address) {
     }
 
     if (loc >= globalInt && loc < globalFloat) { // global
-        if (loc - globalInt >= globalIntMemory.size()) {std::cout << "ERROR saving global int memory\n"; return; }
+        if (loc - globalInt >= globalIntMemory.size()) {std::cout << "ERROR: Al guardar a la memoria global int\n"; return; }
         globalIntMemory[loc - globalInt] = value;
 
     } else if (loc >= globalTempInt && loc < globalTempFloat) { // global temp
-        if (loc - globalTempInt >= globalTempIntMemory.size()) { std::cout << "ERROR saving global temp int memory\n"; return; }
+        if (loc - globalTempInt > globalTempIntMemory.size()) { std::cout << "ERROR: Al guardar a la memoria global temp int\n"; return; }
         globalTempIntMemory[loc - globalTempInt] = value;
 
     } else if (loc >= localInt && loc < localFloat) { // local
         int currentOffset = sOffsets[0][sContextos.back()];
 
-        if (loc - localInt >= localIntMemory.size() - currentOffset) {std::cout << "ERROR saving local int memory\n"; return; }
+        if (loc - localInt >= localIntMemory.size() - currentOffset) {std::cout << "ERROR: Al guardar a la memoria local int\n"; return; }
         int relativePos = loc - localInt + currentOffset;
         localIntMemory[relativePos] = value;
 
     } else if (loc >= localTempInt && loc < localTempFloat) { // local temp
         int currentOffset = sOffsets[3][sContextos.back()];
 
-        if (loc - localTempInt >= localTempIntMemory.size() - currentOffset) {std::cout << "ERROR saving local temp int memory\n"; return; }
+        if (loc - localTempInt > localTempIntMemory.size() - currentOffset) {std::cout << "ERROR: Al guardar a la memoria local temp int\n"; return; }
         int relativePos = loc - localTempInt + currentOffset;
         localTempIntMemory[relativePos] = value;
 
     } else if (loc >= constInt && loc < constFloat) { // const
-        if (loc - constInt >= constIntMemory.size()) {std::cout << "ERROR saving const int memory\n"; return; }
+        if (loc - constInt >= constIntMemory.size()) {std::cout << "ERROR: Al guardar a la memoria const int\n"; return; }
         constIntMemory[loc - constInt] = value;
     }
 }
@@ -336,48 +355,64 @@ void Memoria::saveFloatValue(float value, const std::string address) {
     int loc = stoi(address);
 
     if (loc >= globalFloat && loc < globalChar) { // global
-        if (loc - globalFloat >= globalFloatMemory.size()) {std::cout << "ERROR saving global Float memory\n"; return; }
+        if (loc - globalFloat >= globalFloatMemory.size()) {std::cout << "ERROR: Al guardar a la memoria global Float\n"; return; }
         globalFloatMemory[loc - globalFloat] = value;
 
     } else if (loc >= globalTempFloat && loc < globalTempBool) { // global temp
-        if (loc - globalTempFloat >= globalTempFloatMemory.size()) { std::cout << "ERROR saving global temp Float memory\n"; return; }
+        if (loc - globalTempFloat > globalTempFloatMemory.size()) { std::cout << "ERROR: Al guardar a la memoria global temp Float\n"; return; }
         globalTempFloatMemory[loc - globalTempFloat] = value;
 
     } else if (loc >= localFloat && loc < localChar) { // local
         int currentOffset = sOffsets[1][sContextos.back()];
 
-        if (loc - localFloat >= localFloatMemory.size() - currentOffset) {std::cout << "ERROR saving local Float memory\n"; return; }
+        if (loc - localFloat >= localFloatMemory.size() - currentOffset) {std::cout << "ERROR: Al guardar a la memoria local Float\n"; return; }
         int relativePos = loc - localTempFloat + currentOffset;
         localFloatMemory[relativePos] = value;
 
     } else if (loc >= localTempFloat && loc < localTempBool) { // local temp
         int currentOffset = sOffsets[4][sContextos.back()];
 
-        if (loc - localTempFloat >= localTempFloatMemory.size() - currentOffset) {std::cout << "ERROR saving local temp Float memory\n"; return; }
+        if (loc - localTempFloat > localTempFloatMemory.size() - currentOffset) {std::cout << "ERROR: Al guardar a la memoria local temp Float\n"; return; }
         int relativePos = loc - localTempFloat + currentOffset;
         localTempFloatMemory[relativePos] = value;
 
     } else if (loc >= constFloat && loc < constChar) { // const
-        if (loc - constFloat >= constFloatMemory.size()) {std::cout << "ERROR saving const Float memory\n"; return; }
+        if (loc - constFloat >= constFloatMemory.size()) {std::cout << "ERROR: Al guardar a la memoria const Float\n"; return; }
         constFloatMemory[loc - constFloat] = value;
     }
 }
 
 void Memoria::saveCharValue(char value, const std::string address) {
+    int loc = stoi(address);
 
+    if (loc >= globalChar && loc < globalTempInt) { // global
+        if (loc - globalChar >= globalCharMemory.size()) {std::cout << "ERROR: Al guardar a la memoria global char\n"; return; }
+        globalCharMemory[loc - globalChar] = value;
+
+    } else if (loc >= localChar && loc < localTempInt) { // local
+        int currentOffset = sOffsets[2][sContextos.back()];
+
+        if (loc - localChar >= localCharMemory.size() - currentOffset) {std::cout << "ERROR: Al guardar a la memoria local char\n"; return; }
+        int relativePos = loc - loc + currentOffset;
+        localCharMemory[relativePos] = value;
+
+    } else if (loc >= constChar && loc < constStart+constSize) { // const
+        if (loc - constChar >= constCharMemory.size()) {std::cout << "ERROR: Al guardar a la memoria const char\n"; return; }
+        constCharMemory[loc - constChar] = value;
+    }
 }
 
 void Memoria::saveBoolValue(bool value, const std::string address) {
     int loc = stoi(address);
 
     if (loc >= globalTempBool && loc < localInt) { // global temp
-        if (loc - globalTempBool >= globalTempBoolMemory.size()) { std::cout << "ERROR saving global temp Bool memory\n"; return; }
+        if (loc - globalTempBool >= globalTempBoolMemory.size()) { std::cout << "ERROR: Al guardar a la memoria global temp Bool\n"; return; }
         globalTempBoolMemory[loc - globalTempBool] = value;
 
     } else if (loc >= localTempBool && loc < constInt) { // local temp
         int currentOffset = sOffsets[5][sContextos.back()];
 
-        if (loc - localTempBool >= localTempBoolMemory.size() - currentOffset) {std::cout << "ERROR saving local temp Bool memory\n"; return; }
+        if (loc - localTempBool >= localTempBoolMemory.size() - currentOffset) {std::cout << "ERROR: Al guardar a la memoria local temp Bool\n"; return; }
         int relativePos = loc - localTempBool + currentOffset;
         localTempBoolMemory[relativePos] = value;
     }
@@ -386,23 +421,14 @@ void Memoria::saveBoolValue(bool value, const std::string address) {
 void Memoria::saveParameterIntValue(int value, int parameterOffset) {
     int loc = localInt + parameterOffset;
 
-    if (loc - localInt > localIntMemory.size() - sOffsets[0].back()) {std::cout << "ERROR saving local int param memory\n"; return; }
+    if (loc - localInt > localIntMemory.size() - sOffsets[0].back()) {std::cout << "ERROR: Al guardar a la memoria local int param\n"; return; }
     int relativePos = loc - localInt + sOffsets[0].back();
     localIntMemory[relativePos] = value;
-
-    /* delete
-    std::cout << "LOCAL MEMORY:\n";
-    std::cout << parameterOffset << std::endl;
-    std::cout << loc - localInt << " >= " << localIntMemory.size() << "-" << sOffsets[0].back() << std::endl;
-    for (int val : localIntMemory) {
-        std::cout << val << ", ";
-    }
-    */
 }
 void Memoria::saveParameterFloatValue(float value, int parameterOffset) {
     int loc = localFloat + parameterOffset;
 
-    if (loc - localFloat >= localFloatMemory.size() - sOffsets[1].back()) {std::cout << "ERROR saving local float param memory\n"; return; }
+    if (loc - localFloat >= localFloatMemory.size() - sOffsets[1].back()) {std::cout << "ERROR: Al guardar a la memoria local float param\n"; return; }
     int relativePos = loc - localFloat + sOffsets[1].back();
     localFloatMemory[relativePos] = value;
 }
@@ -410,7 +436,7 @@ void Memoria::saveParameterFloatValue(float value, int parameterOffset) {
 void Memoria::saveParameterCharValue(char value,int parameterOffset) {
     int loc = localChar + parameterOffset;
 
-    if (loc - localChar >= localCharMemory.size() - sOffsets[0].back()) {std::cout << "ERROR saving local char param memory\n"; return; }
+    if (loc - localChar >= localCharMemory.size() - sOffsets[0].back()) {std::cout << "ERROR: Al guardar a la memoria local char param\n"; return; }
     int relativePos = loc - localChar + sOffsets[0].back();
     localCharMemory[relativePos] = value;
 }

@@ -42,6 +42,7 @@ CHAR [a-zA-Z]
 ":"		            {return(dos_puntos);}
 ","		            {return(coma);}
 "."		            {return(punto);}
+"->"                {return(flecha);}
 "("		            {return(l_paren);}
 ")"		            {return(r_paren);}
 "{"		            {return(l_brace);}
@@ -49,7 +50,7 @@ CHAR [a-zA-Z]
 "["		            {return(l_bracket);}
 "]"		            {return(r_bracket);}
 
-\'{CHAR}\'						        {yylval.charval=yytext[0]; return(cte_char);}
+\'{CHAR}\'						        {yylval.strval=yytext; return(cte_char);}
 ("-")?{DIGIT}+			    			{yylval.intval=atoi(yytext); return(cte_int);}
 ("-")?{DIGIT}*("."{DIGIT}+)?("E"("+"|"-")?{DIGIT}+)?	{yylval.floatval=atof(yytext); return(cte_float);}
 "%%".*   						        ;

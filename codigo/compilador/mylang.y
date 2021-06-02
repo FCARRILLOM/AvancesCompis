@@ -32,9 +32,9 @@ TablaSimbolos tabla(tablasDatos, tablasDatos.funcDir, tablasDatos.clasesDir, qua
 %token variables funcion lee escribe regresa
 %token <strval>n_void <strval>n_int <strval>n_float <strval>n_char
 %token <strval>asignador <strval>mas <strval>menos <strval>divi <strval>mult <strval>op_and <strval>op_or <strval>op_rel
-%token punto_coma dos_puntos coma punto 
+%token punto_coma dos_puntos coma punto flecha
 %token l_paren r_paren l_brace r_brace l_bracket r_bracket
-%token <intval>cte_int <floatval>cte_float <charval>cte_char <strval>cte_string <strval>id_
+%token <intval>cte_int <floatval>cte_float <strval>cte_char <strval>cte_string <strval>id_
 
 %type <strval>TIPO_RET TIPO_SIMPLE TIPO_VAR
 
@@ -121,8 +121,11 @@ ASIG			:	punto id_ { quad.checkValidAttribute($2); }
 ASIG_			:	coma EXP { quad.getArrayDimensionResult(); }
 				|	/*epsilon*/
 				;
-LLAMADA_VOID 	:	id_ { tabla.verifyVoidFunction($1); } l_paren { tabla.generateEra(); }
+LLAMADA_VOID 	:	id_ { quad.addOperand($1); } VOID_ATTR l_paren { tabla.verifyVoidFunction(); tabla.generateEra(); }
 					FUNC_PARAM r_paren { tabla.verifyLastParam(); tabla.addGoSub(); } punto_coma
+				;
+VOID_ATTR		:	flecha id_ { quad.checkValidVoidMethod($2); }
+				|	/*epsilon*/
 				;
 FUNC_PARAM		:	EXP { tabla.verifyParameterType(); tabla.moveToNextParam(); } FUNC_PARAM_
 				|	/*epsilon*/
@@ -195,7 +198,8 @@ F				:	l_paren { quad.addFalseBottom(); } EXP_Q r_paren { quad.removeFalseBottom
 				|	CTE
 				|	id_ { quad.addOperand($1); } ID_A
 				;
-ID_A			: 	ID_ATTR LLAMADA_RET
+ID_A			: 	ID_ATTR
+				| 	ID_METHOD
 				|	l_bracket { quad.verifyArrayDimensions(); } EXP { quad.getArrayDimensionResult(); } 
 					ID_ARR r_bracket { quad.addArrayQuads(); }
 				| 	/*epsilon*/
@@ -206,13 +210,18 @@ ID_ARR			:	coma EXP { quad.getArrayDimensionResult(); }
 ID_ATTR			: 	punto id_ { quad.checkValidAttribute($2); }
 				|	/*epsilon*/
 				;
+ID_METHOD		:	FLECHA LLAMADA_RET
+				;
+FLECHA			:	flecha id_ { quad.checkValidMethod($2); }
+				|	/*epsilon*/
+				;
 LLAMADA_RET 	:	l_paren { tabla.verifyFunction(); tabla.generateEra(); }
 					FUNC_PARAM r_paren { tabla.verifyLastParam(); tabla.addGoSub(); tabla.addReturnValue(); }
 				|   /*epsilon*/
 				;
 CTE				:	cte_int { quad.addConstOperand(std::to_string($1), "int"); }
 				|	cte_float { quad.addConstOperand(std::to_string($1), "float"); }
-				|	cte_char { quad.addConstOperand(std::to_string($1), "char"); }
+				|	cte_char { quad.addConstOperand($1, "char"); }
 				;
 ESTATUTOS		:	ESTATUTO ESTATUTOS
 				|	/*epsilon*/

@@ -129,7 +129,7 @@ public:
    // LLAMADAS DE FUNCIONES
    // 1
    void verifyFunction();
-   void verifyVoidFunction(const std::string funcId);
+   void verifyVoidFunction();
 
    // 2
    void generateEra();

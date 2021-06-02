@@ -30,14 +30,14 @@ void CPU::parseFile(const std::string fileName) {
             name = entry.substr(start, comma - start);
             entry.erase(start, comma+2);
         } else {
-            std::cout << "ERROR: cannot parse funcdir name entry: " + entry + "\n";
+            std::cout << "ERROR: No se puede analizar la entrada funcdir name: " + entry + "\n";
         }
         comma = entry.find(",");
         if (comma != std::string::npos) {
             quadPos = stoi(entry.substr(start, comma - start));
             entry.erase(start, comma+2);
         } else {
-            std::cout << "ERROR: cannot funcdir quadpos entry: " + entry + "\n";
+            std::cout << "ERROR: No se puede analizar la entrada funcdir quadpos: " + entry + "\n";
         }
 
         std::vector<int> varSizes;
@@ -47,7 +47,7 @@ void CPU::parseFile(const std::string fileName) {
                 varSizes.push_back(stoi(entry.substr(start, comma - start)));
                 entry.erase(start, comma+2);
             } else {
-                std::cout << "ERROR: cannot parse funcdir var size entry: " + entry + "\n";
+                std::cout << "ERROR: No se puede analizar la entrada funcdir var size: " + entry + "\n";
             }
         }
         varSizes.push_back(stoi(entry)); // push last element after last comma
@@ -74,7 +74,7 @@ void CPU::parseFile(const std::string fileName) {
             position = entry.substr(comma+2); // ', '
             constTable[position] = value;
         } else {
-            std::cout << "ERROR: cannot parse const table entry: " + entry + "\n";
+            std::cout << "ERROR: No se puede analizar la entrada const table: " + entry + "\n";
         }
     }
 
@@ -87,21 +87,21 @@ void CPU::parseFile(const std::string fileName) {
             op = entry.substr(start, comma - start);
             entry.erase(start, comma+2);
         } else {
-            std::cout << "ERROR: cannot parse quad entry: " + entry + "\n";
+            std::cout << "ERROR: No se puede analizar la entrada quad: " + entry + "\n";
         }
         comma = entry.find(",");
         if (comma != std::string::npos) {
             oper1 = entry.substr(start, comma - start);
             entry.erase(start, comma+2);
         } else {
-            std::cout << "ERROR: cannot parse quad entry: " + entry + "\n";
+            std::cout << "ERROR: No se puede analizar la entrada quad: " + entry + "\n";
         }
         comma = entry.find(",");
         if (comma != std::string::npos) {
             oper2 = entry.substr(start, comma - start);
             entry.erase(start, comma+2);
         } else {
-            std::cout << "ERROR: cannot parse quad entry: " + entry + "\n";
+            std::cout << "ERROR: No se puede analizar la entrada quad: " + entry + "\n";
         }
         res = entry;
 
@@ -125,7 +125,7 @@ void CPU::runCode() {
         QuadEntry quad = quads[insPtr];
         int operation = stoi(quad.op);
 
-        // delete
+        //lete
         //std::cout << insPtr << " - ";
         //std::cout << quad.op << ", " << quad.oper1 << ", " << quad.oper2 << ", " << quad.res << std::endl;
         
@@ -461,7 +461,7 @@ void CPU::runCode() {
                 bool res = mem.getBoolValue(quad.oper1);
                 if (!res) {
                     int falseLoc = stoi(quad.res);
-                    insPtr = falseLoc - 1; // -1 porque al final del switch hace ++
+                    insPtr = falseLoc - 1; // -1 porque al finall switch hace ++
                 }
                 break;
             }
@@ -469,11 +469,11 @@ void CPU::runCode() {
                 gosubCheckpoint.push_back(insPtr);
                 mem.changeToNewContext();
                 int subLoc = stoi(quad.res);
-                insPtr = subLoc - 1; // -1 porque al final del switch hace ++
+                insPtr = subLoc - 1; // -1 porque al finall switch hace ++
                 break;
             }
             case 16: { // GOTO
-                insPtr = stoi(quad.res) - 1; // -1 porque al final del switch hace ++
+                insPtr = stoi(quad.res) - 1; // -1 porque al finall switch hace ++
                 break;
             }
             case 17: { // ERA
@@ -523,7 +523,7 @@ void CPU::runCode() {
                 break;
             }
             case 21: { // return
-                // TODO: jump out of function and delete ERA ENDFUNC)
+                // TODO: jump out of function andlete ERA ENDFUNC)
                 std::string varType = mem.getAddressType(quad.res);
                 if (varType == "int") {
                     mem.saveIntValue(mem.getIntValue(quad.res), quad.oper1);
@@ -542,7 +542,7 @@ void CPU::runCode() {
                 int linf = mem.getIntValue(quad.oper2);
                 int lsup = mem.getIntValue(quad.res);
                 if (idx < linf || idx > lsup) {
-                    std::cout << "ERROR: index " << idx << " out of bounds [";
+                    std::cout << "ERROR: Índice " << idx << " fuera de los límites [";
                     std::cout <<  linf << ", " << lsup << "]\n";
                     errorFound = true;
                 }

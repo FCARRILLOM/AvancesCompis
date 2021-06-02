@@ -2,6 +2,7 @@ programa simple;
 variables
 	int : a, b;
     float : i, j;
+    char: letra_a, abc[3];
 
 funcion void demo();
 variables
@@ -12,25 +13,9 @@ variables
 	escribe("demo=", x+y);
 }
 
-funcion int demo_int();
-{
-    demo();
-    escribe("demo_int:");
-    regresa(50);
-}
 
 principal() {
-	a = 10;
-    b = 5;
-
-    escribe(demo_int());
-
-    escribe("valor de i: ");
-    lee(a);
-
-    i = 10.0 * a;
-    j = b + 10.5;
-
-    escribe("a: ", a, "b: ", b);
-    escribe("i: ", i, "j: ", j);
+    letra_a = 'a';
+    
+    escribe(letra_a);
 }

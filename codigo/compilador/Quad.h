@@ -144,6 +144,10 @@ public:
     // 1
     void checkValidAttribute(std::string attributeName);
 
+    void checkValidMethod(std::string methodName);
+
+    void checkValidVoidMethod(std::string methodName);
+
     // ACCESO ARREGLOS
     // 2
     void verifyArrayDimensions();

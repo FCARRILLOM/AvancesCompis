@@ -118,14 +118,14 @@ void Quad::addAssignQuad() {
         std::vector<std::string> tempQuad {op, res, "-", left_operand};
         addQuad(tempQuad);
     } else {
-        std::cout << "ERROR: cannot assign " + left_operand + " = " + res + "\n";
+        std::cout << "ERROR: No se puede asignar " + left_operand + " = " + res + "\n";
         std::cout << assignType << std::endl;
     }
 }
 
 std::string Quad::getNextAvail(const std::string type) {
     if (sTemps.empty()) {
-        std::cout << "ERROR: empty temporal counter for avail\n";
+        std::cout << "ERROR: Contador temporal vacío para disponibilidad\n";
         return "err";
     }
 
@@ -181,7 +181,7 @@ std::string Quad::getVariableAddress(const std::string name) {
     } else if (programName != "" && (*(*tablasDatos).funcDir[programName].varDir).count(name) > 0) { // global vars
         addr = (*(*tablasDatos).funcDir[programName].varDir)[name].memoryAddr;
     } else {
-        std::cout << "ERROR: variable lookup for '" + name + "' not found\n";
+        std::cout << "ERROR: Variable '" + name + "' no encontrada\n";
     }
     return std::to_string(addr);
 }
@@ -246,7 +246,7 @@ void Quad::addOperand(const std::string name) {
     } else if ((*(*tablasDatos).funcDir[programName].varDir).count(name) > 0) { // global
         type = (*(*tablasDatos).funcDir[programName].varDir)[name].varType;
     } else {
-        std::cout << "ERROR: variable '" + name + "' not found\n";
+        std::cout << "ERROR: Variable '" + name + "' no encontrada\n";
     }
     
     sOperands.push_back(name);
@@ -366,6 +366,36 @@ void Quad::checkValidAttribute(std::string attributeName) {
     sTypes.push_back(attributeType);
 }
 
+// 2
+void Quad::checkValidMethod(std::string methodName) {
+    std::string operand = sOperands.back();
+    sOperands.pop_back();
+    std::string operandClass = sTypes.back();
+    sTypes.pop_back();
+
+    std::unordered_map<std::string, ClassEntry> &clasesDir = (*tablasDatos).clasesDir;
+    ClassEntry varClass =  clasesDir[operandClass];
+    std::string methodType = varClass.varTable[methodName];
+
+    std::string completeVariable = operand + "->" + methodName;
+
+    sOperands.push_back(completeVariable);
+    sTypes.push_back(methodType);
+}
+
+// 3
+void Quad::checkValidVoidMethod(std::string methodName) {
+    std::string operand = sOperands.back();
+    sOperands.pop_back();
+    std::string operandClass = sTypes.back();
+    sTypes.pop_back();
+
+    std::string completeVariable = operand + "->" + methodName;
+
+    sOperands.push_back(completeVariable);
+    sTypes.push_back("void");
+}
+
 
 // ACCESO ARREGLOS
 // 2
@@ -390,11 +420,11 @@ void Quad::verifyArrayDimensions() {
         currentVar = (*(*tablasDatos).funcDir[programName].varDir)[operand];
         currentArrayScope = "global";
     } else {
-        std::cout << "ERROR: variable '" + operand + "' not found\n";
+        std::cout << "ERROR: variable '" + operand + "' no encontrada\n";
     }
 
     if (currentVar.arrNodes.empty()) {
-        std::cout << "ERROR: variable " + currentFunc + "/" + operand + " is not an array\n";
+        std::cout << "ERROR: variable " + currentFunc + "/" + operand + " no es un arreglo\n";
         return;
     }
     
@@ -437,14 +467,14 @@ void Quad::addArrayQuads() {
         if ((*tablasDatos).constDir.count(value) <= 0) {
             int memAddr = memoria->reserveIntMemory("const", false, 1);
             if (memAddr == -1)
-                std::cout << "ERROR: cannot reserve memory for const " +  value + " \n";
+                std::cout << "ERROR: No se puede reservar memoria para la constante " +  value + " \n";
 
             (*tablasDatos).constDir[value] = memAddr;
         }
         if ((*tablasDatos).constDir.count(lsup) <= 0) {
             int memAddr = memoria->reserveIntMemory("const", false, 1);
             if (memAddr == -1)
-                std::cout << "ERROR: cannot reserve memory for const " + lsup  + " \n";
+                std::cout << "ERROR: No se puede reservar memoria para la constante " + lsup  + " \n";
 
             (*tablasDatos).constDir[lsup] = memAddr;
         }
@@ -489,7 +519,7 @@ void Quad::addArrayQuads() {
         sTypes.push_back("int");
 
     } else {
-        std::cout << "ERROR: too many dimensions\n";
+        std::cout << "ERROR: Exceso de dimensiones\n";
         return;
     }
 
@@ -515,6 +545,7 @@ void Quad::addArrayQuads() {
 // CONSTANTES
 // 1
 void Quad::addConstOperand(const std::string value, const std::string type) {
+    //std::cout << type << " " << value << "\n";
     sOperands.push_back(value);
     sTypes.push_back(type);
 
@@ -531,7 +562,7 @@ void Quad::addConstOperand(const std::string value, const std::string type) {
     }
     
     if (memAddr == -1) {
-        std::cout << "ERROR: cannot reserve memory for const " +  value + " \n";
+        std::cout << "ERROR: No se puede reservar memoria para la constante " +  value + " \n";
     }
 
     (*tablasDatos).constDir[value] = memAddr;
@@ -547,7 +578,7 @@ void Quad::addRead(const std::string name) {
 // 17
 void Quad::addWriteExp() {
     if (sOperands.empty()) {
-        std::cout << "Write EXP error: no operands left\n";
+        std::cout << "Write EXP error: No quedan operandos\n";
         return;
     }
     std::string res = sOperands.back();
@@ -570,7 +601,7 @@ void Quad::addGotoIf() {
     sTypes.pop_back();
 
     if (expType != "bool") {
-        std::cout << "ERROR: decision expresion is not type 'bool'\n";
+        std::cout << "ERROR: La expresión de decisión no es de tipo 'bool'\n";
     } else {
         std::string result = sOperands.back();
         sOperands.pop_back();
@@ -615,7 +646,7 @@ void Quad::addGotoWhile() {
     sTypes.pop_back();
 
     if (expType != "bool") {
-        std::cout << "ERROR: conditional expresion is not type 'bool'\n";
+        std::cout << "ERROR: La expresión condicional no es de tipo 'bool'\n";
     } else {
         std::string result = sOperands.back();
         sOperands.pop_back();
@@ -648,7 +679,7 @@ void Quad::addLoopCounter(const std::string counterId) {
     sTypes.pop_back();
 
     if (counterType != "int") {
-        std::cout << "ERROR: loop counter not of type 'int'\n";
+        std::cout << "ERROR: Contador de bucle no de tipo 'int'\n";
     } else {
         std::string counterExp = sOperands.back();
         sOperands.pop_back();
@@ -680,7 +711,7 @@ void Quad::addLoopLimit() {
     sTypes.pop_back();
 
     if (limitType != "int") {
-        std::cout << "ERROR: loop counter limit not of type 'int'\n";
+        std::cout << "ERROR: El límite del contador de bucles no es de tipo 'int'\n";
     } else {
         std::string limitExp = sOperands.back();
         sOperands.pop_back();
@@ -708,7 +739,7 @@ void Quad::addGotoFor() {
     sTypes.pop_back();
 
     if (resultType != "bool") {
-        std::cout << "ERROR: loop expresion not of type 'bool'\n";
+        std::cout << "ERROR: Expresión de bucle no de tipo 'bool'\n";
     } else {
         std::string result = sOperands.back();
         sOperands.pop_back();
@@ -798,14 +829,14 @@ void Quad::savePrincipalLoc() {
     if ((*tablasDatos).constDir.count("0") <= 0) {
         int memAddr = memoria->reserveIntMemory("const", false, 1);
         if (memAddr == -1)
-            std::cout << "ERROR: cannot reserve memory for const '0' \n";
+            std::cout << "ERROR: No se puede reservar memoria para constante '0' \n";
 
         (*tablasDatos).constDir["0"] = memAddr;
     }
     if ((*tablasDatos).constDir.count("1") <= 0) {
         int memAddr = memoria->reserveIntMemory("const", false, 1);
         if (memAddr == -1)
-            std::cout << "ERROR: cannot reserve memory for const '1' \n";
+            std::cout << "ERROR: No se puede reservar memoria para constante '1' \n";
 
         (*tablasDatos).constDir["1"] = memAddr;
     }
@@ -823,7 +854,7 @@ void Quad::addGotoPrincipalLoc() {
 // UTILIDAD
 std::string Quad::popOperand() {
     if (sOperands.empty()) {
-        return "ERROR: funcion no puede regresar operandos. Lista vacia\n";
+        return "ERROR: Funcion no puede regresar operandos. Lista vacia\n";
     }
     std::string temp = sOperands.back();
     sOperands.pop_back();
@@ -832,7 +863,7 @@ std::string Quad::popOperand() {
 
 std::string Quad::popType() {
     if (sTypes.empty()) {
-        return "ERROR: funcion no puede regresar tipo. Lista vacia\n";
+        return "ERROR: Funcion no puede regresar tipo. Lista vacia\n";
     }
     std::string temp = sTypes.back();
     sTypes.pop_back();
@@ -850,7 +881,7 @@ void Quad::addNewTempCounter() {
 
 std::vector<int> Quad::getCurrentTempTypes() {
     if (sTemps.size() <= 0) {
-        std::cout << "ERROR: no temporal counters left\n";
+        std::cout << "ERROR: No quedan contadores temporales\n";
         return {-1};
     }
 
@@ -867,7 +898,7 @@ void Quad::reserveConstValue(std::string value) {
     if ((*tablasDatos).constDir.count(value) <= 0) { // reserva valor constante en tabla de ctes.
         int memAddr = memoria->reserveIntMemory("const", false, 1);
         if (memAddr == -1)
-            std::cout << "ERROR: cannot reserve memory for const " +  value + " \n";
+            std::cout << "ERROR: No se puede reservar memoria para constante " +  value + " \n";
 
         (*tablasDatos).constDir[value] = memAddr;
     }

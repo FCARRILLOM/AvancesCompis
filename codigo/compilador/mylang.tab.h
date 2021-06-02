@@ -73,17 +73,18 @@
      dos_puntos = 289,
      coma = 290,
      punto = 291,
-     l_paren = 292,
-     r_paren = 293,
-     l_brace = 294,
-     r_brace = 295,
-     l_bracket = 296,
-     r_bracket = 297,
-     cte_int = 298,
-     cte_float = 299,
-     cte_char = 300,
-     cte_string = 301,
-     id_ = 302
+     flecha = 292,
+     l_paren = 293,
+     r_paren = 294,
+     l_brace = 295,
+     r_brace = 296,
+     l_bracket = 297,
+     r_bracket = 298,
+     cte_int = 299,
+     cte_float = 300,
+     cte_char = 301,
+     cte_string = 302,
+     id_ = 303
    };
 #endif
 /* Tokens.  */
@@ -121,17 +122,18 @@
 #define dos_puntos 289
 #define coma 290
 #define punto 291
-#define l_paren 292
-#define r_paren 293
-#define l_brace 294
-#define r_brace 295
-#define l_bracket 296
-#define r_bracket 297
-#define cte_int 298
-#define cte_float 299
-#define cte_char 300
-#define cte_string 301
-#define id_ 302
+#define flecha 292
+#define l_paren 293
+#define r_paren 294
+#define l_brace 295
+#define r_brace 296
+#define l_bracket 297
+#define r_bracket 298
+#define cte_int 299
+#define cte_float 300
+#define cte_char 301
+#define cte_string 302
+#define id_ 303
 
 
 
@@ -146,7 +148,7 @@ typedef union YYSTYPE
   char* strval;
 }
 /* Line 1529 of yacc.c.  */
-#line 150 "mylang.tab.h"
+#line 152 "mylang.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
